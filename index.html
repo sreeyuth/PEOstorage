@@ -59,17 +59,15 @@
   }
 
   .app-container {
-    max-width: 860px;
+    max-width: 900px;
     margin: 40px auto;
     padding: 0 20px;
     display: grid;
     gap: 28px;
   }
 
-  /* ── TABS ── */
   .tabs {
     display: flex;
-    gap: 0;
     border: 2px solid var(--border);
     width: fit-content;
     background: var(--border);
@@ -90,12 +88,8 @@
     transition: all 0.15s;
   }
 
-  .tab-btn.active {
-    background: var(--accent);
-    color: #fff;
-  }
+  .tab-btn.active { background: var(--accent); color: #fff; }
 
-  /* ── FORM CARD ── */
   .card {
     background: var(--surface);
     border: 2px solid var(--border);
@@ -115,16 +109,9 @@
     gap: 10px;
   }
 
-  .card-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #ddd;
-  }
+  .card-title::after { content: ''; flex: 1; height: 1px; background: #ddd; }
 
-  .form-row {
-    margin-bottom: 22px;
-  }
+  .form-row { margin-bottom: 22px; }
 
   label {
     display: block;
@@ -141,9 +128,7 @@
     background: var(--border);
     color: var(--bg);
     font-size: 0.65rem;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
+    width: 18px; height: 18px; line-height: 18px;
     text-align: center;
     margin-right: 8px;
     font-weight: 700;
@@ -165,11 +150,7 @@
     transition: border-color 0.15s, box-shadow 0.15s;
   }
 
-  select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 3px 3px 0 var(--accent);
-  }
+  select:focus { outline: none; border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
 
   .submit-btn {
     width: 100%;
@@ -185,7 +166,6 @@
     text-transform: uppercase;
     cursor: pointer;
     transition: all 0.15s;
-    position: relative;
   }
 
   .submit-btn:hover {
@@ -195,36 +175,29 @@
     transform: translate(-1px, -1px);
   }
 
-  .submit-btn:active {
-    transform: translate(1px, 1px);
-    box-shadow: 2px 2px 0 #8a2500;
-  }
+  .submit-btn:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 #8a2500; }
+  .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  /* ── SUCCESS TOAST ── */
   .toast {
     display: none;
-    background: var(--accent2);
-    color: #fff;
     padding: 14px 20px;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.85rem;
-    border: 2px solid #0d4a28;
-    box-shadow: 3px 3px 0 #0d4a28;
+    border: 2px solid;
     margin-top: 16px;
     animation: slideIn 0.25s ease;
   }
 
-  .toast.show { display: block; }
+  .toast.success { background: var(--accent2); color: #fff; border-color: #0d4a28; box-shadow: 3px 3px 0 #0d4a28; }
+  .toast.error   { background: #fff0eb; color: var(--accent); border-color: var(--accent); box-shadow: 3px 3px 0 #8a2500; }
+  .toast.show    { display: block; }
 
   @keyframes slideIn {
     from { opacity: 0; transform: translateY(-8px); }
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── TABLE ── */
-  .table-wrap {
-    overflow-x: auto;
-  }
+  .table-wrap { overflow-x: auto; }
 
   .data-table {
     width: 100%;
@@ -250,7 +223,6 @@
   }
 
   .data-table tr:last-child td { border-bottom: none; }
-
   .data-table tr:hover td { background: #ece6db; }
 
   .badge {
@@ -263,17 +235,8 @@
     border: 1.5px solid;
   }
 
-  .badge.out {
-    color: var(--accent);
-    border-color: var(--accent);
-    background: #fff0eb;
-  }
-
-  .badge.in {
-    color: var(--accent2);
-    border-color: var(--accent2);
-    background: #edf7f2;
-  }
+  .badge.out { color: var(--accent); border-color: var(--accent); background: #fff0eb; }
+  .badge.in  { color: var(--accent2); border-color: var(--accent2); background: #edf7f2; }
 
   .empty-state {
     text-align: center;
@@ -285,7 +248,6 @@
 
   .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
 
-  /* ── TABLE ACTIONS ── */
   .table-toolbar {
     display: flex;
     justify-content: space-between;
@@ -302,13 +264,14 @@
     letter-spacing: 1px;
   }
 
-  .clear-btn {
+  .toolbar-right { display: flex; gap: 10px; align-items: center; }
+
+  .refresh-btn, .clear-btn {
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.7rem;
     padding: 6px 14px;
-    border: 1.5px solid #cc0000;
+    border: 1.5px solid;
     background: transparent;
-    color: #cc0000;
     cursor: pointer;
     letter-spacing: 1px;
     text-transform: uppercase;
@@ -316,65 +279,33 @@
     transition: all 0.15s;
   }
 
+  .refresh-btn { border-color: var(--accent2); color: var(--accent2); }
+  .refresh-btn:hover { background: var(--accent2); color: #fff; }
+
+  .clear-btn { border-color: #cc0000; color: #cc0000; }
   .clear-btn:hover { background: #cc0000; color: #fff; }
 
-  /* ── QR PANEL ── */
-  .qr-panel {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    padding: 36px;
+  .spinner {
+    display: none;
+    width: 16px; height: 16px;
+    border: 2px solid #ddd;
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin: 0 auto;
   }
 
-  .qr-box {
-    background: #fff;
-    padding: 16px;
-    border: 2px solid var(--border);
-    box-shadow: var(--shadow);
-  }
+  .spinner.show { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .qr-instructions {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-align: center;
-    line-height: 1.6;
-    max-width: 360px;
-  }
+  /* QR */
+  .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 36px; }
+  .qr-box { background: #fff; padding: 16px; border: 2px solid var(--border); box-shadow: var(--shadow); }
+  .qr-instructions { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--muted); text-align: center; line-height: 1.6; max-width: 360px; }
+  .url-display { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; background: #fff; border: 1.5px solid #ccc; padding: 10px 14px; word-break: break-all; color: var(--text); max-width: 100%; text-align: center; }
+  .print-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; padding: 12px 28px; border: 2px solid var(--border); background: var(--border); color: var(--bg); cursor: pointer; transition: all 0.15s; }
+  .print-btn:hover { background: var(--accent); border-color: var(--accent); }
 
-  .url-display {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    background: #fff;
-    border: 1.5px solid #ccc;
-    padding: 10px 14px;
-    word-break: break-all;
-    color: var(--text);
-    max-width: 100%;
-    text-align: center;
-  }
-
-  .print-btn {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    padding: 12px 28px;
-    border: 2px solid var(--border);
-    background: var(--border);
-    color: var(--bg);
-    cursor: pointer;
-    transition: all 0.15s;
-  }
-
-  .print-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-  }
-
-  /* ── HIDDEN PANEL LOGIC ── */
   .panel { display: none; }
   .panel.active { display: block; }
 
@@ -386,7 +317,7 @@
 
   @media print {
     body { background: white !important; background-image: none !important; }
-    header, .tabs, .tab-btn { display: none !important; }
+    header, .tabs { display: none !important; }
     .qr-panel { padding: 0; }
     .card { box-shadow: none; border: 1px solid #ccc; }
   }
@@ -404,9 +335,9 @@
 <div class="app-container">
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('form')">📦 Log Action</button>
-    <button class="tab-btn" onclick="switchTab('table')">📋 Storage Table</button>
-    <button class="tab-btn" onclick="switchTab('qr')">🔗 QR Code</button>
+    <button class="tab-btn active" onclick="switchTab('form', this)">📦 Log Action</button>
+    <button class="tab-btn" onclick="switchTab('table', this)">📋 Storage Table</button>
+    <button class="tab-btn" onclick="switchTab('qr', this)">🔗 QR Code</button>
   </div>
 
   <!-- FORM PANEL -->
@@ -440,17 +371,20 @@
       </select>
     </div>
 
-    <button class="submit-btn" onclick="submitForm()">▶ Submit Entry</button>
-
-    <div class="toast" id="toast">✔ Entry recorded successfully!</div>
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">▶ Submit Entry</button>
+    <div class="toast" id="toast"></div>
   </div>
 
   <!-- TABLE PANEL -->
   <div class="panel card" id="panel-table">
     <div class="card-title">Storage Records</div>
     <div class="table-toolbar">
-      <div class="entry-count" id="entryCount">0 entries</div>
-      <button class="clear-btn" onclick="clearTable()">✕ Clear All</button>
+      <div class="entry-count" id="entryCount">— entries</div>
+      <div class="toolbar-right">
+        <span class="spinner" id="tableSpinner"></span>
+        <button class="refresh-btn" onclick="renderTable()">↻ Refresh</button>
+        <button class="clear-btn" onclick="clearTable()">✕ Clear All</button>
+      </div>
     </div>
     <div class="table-wrap">
       <table class="data-table">
@@ -465,7 +399,7 @@
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
-      <div class="empty-state" id="emptyState">
+      <div class="empty-state" id="emptyState" style="display:none">
         <div class="icon">📭</div>
         No entries yet. Scan the QR code or use the form to log a box action.
       </div>
@@ -480,7 +414,8 @@
       <div class="url-display" id="urlDisplay"></div>
       <div class="qr-instructions">
         Print or display this QR code at your storage location.<br>
-        Anyone who scans it will land directly on the logging form.
+        Anyone who scans it will land directly on the logging form.<br><br>
+        All submissions feed into one shared database.
       </div>
       <button class="print-btn" onclick="window.print()">🖨 Print QR Code</button>
     </div>
@@ -489,113 +424,158 @@
 </div>
 
 <script>
-  // ── Storage key
-  const STORAGE_KEY = 'boxtrack_entries';
+  // ── Supabase config
+  const SUPABASE_URL = 'https://lisimvtheamxhfqvzirz.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpc2ltdnRoZWFteGhmcXZ6aXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mzk0MzYsImV4cCI6MjA5MzMxNTQzNn0.KInfxkNY9sHhSN7xJS9AB4ZexXddKcJBC1aOF1ropVA';
+  const TABLE = 'box_logs';
 
-  // ── Load entries from localStorage
-  function loadEntries() {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch { return []; }
-  }
-
-  function saveEntries(entries) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-  }
+  const headers = {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_KEY,
+    'Authorization': 'Bearer ' + SUPABASE_KEY,
+    'Prefer': 'return=representation'
+  };
 
   // ── Tab switching
-  function switchTab(name) {
+  function switchTab(name, btn) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + name).classList.add('active');
-    event.target.classList.add('active');
+    btn.classList.add('active');
     if (name === 'table') renderTable();
   }
 
-  // ── Form submission
-  function submitForm() {
+  // ── Show toast
+  function showToast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type + ' show';
+    setTimeout(() => t.classList.remove('show'), 4000);
+  }
+
+  // ── Submit form → Supabase INSERT
+  async function submitForm() {
     const box    = document.getElementById('boxName').value;
     const entire = document.getElementById('entireBox').value;
     const action = document.getElementById('action').value;
 
     if (!box || !entire || !action) {
-      alert('Please answer all three questions before submitting.');
+      showToast('⚠ Please answer all three questions.', 'error');
       return;
     }
 
     const status = action === 'pick up' ? 'Checked Out' : 'In Storage';
-    const now    = new Date();
-    const ts     = now.toLocaleDateString('en-CA') + ' ' + now.toLocaleTimeString('en-CA', {hour:'2-digit', minute:'2-digit'});
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
 
-    const entry = { box, entire, status, ts };
-    const entries = loadEntries();
-    entries.unshift(entry); // newest first
-    saveEntries(entries);
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ box, entire_box: entire, status })
+      });
 
-    // Reset
-    document.getElementById('boxName').value  = '';
-    document.getElementById('entireBox').value = '';
-    document.getElementById('action').value   = '';
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || res.statusText);
+      }
 
-    // Toast
-    const toast = document.getElementById('toast');
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
-
-  // ── Render table
-  function renderTable() {
-    const entries   = loadEntries();
-    const tbody     = document.getElementById('tableBody');
-    const emptyEl   = document.getElementById('emptyState');
-    const countEl   = document.getElementById('entryCount');
-
-    tbody.innerHTML = '';
-    countEl.textContent = entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
-
-    if (entries.length === 0) {
-      emptyEl.style.display = 'block';
-      return;
+      document.getElementById('boxName').value  = '';
+      document.getElementById('entireBox').value = '';
+      document.getElementById('action').value   = '';
+      showToast('✔ Entry recorded successfully!', 'success');
+    } catch (e) {
+      showToast('✖ Error saving: ' + e.message, 'error');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '▶ Submit Entry';
     }
-    emptyEl.style.display = 'none';
-
-    entries.forEach((e, i) => {
-      const badgeClass = e.status === 'Checked Out' ? 'out' : 'in';
-      const row = document.createElement('tr');
-      row.innerHTML = `
-        <td style="color:var(--muted);font-size:0.75rem">${entries.length - i}</td>
-        <td><strong>Box ${e.box}</strong></td>
-        <td>${e.entire}</td>
-        <td><span class="badge ${badgeClass}">${e.status}</span></td>
-        <td style="color:var(--muted);font-size:0.78rem">${e.ts}</td>
-      `;
-      tbody.appendChild(row);
-    });
   }
 
-  function clearTable() {
-    if (!confirm('Clear all entries? This cannot be undone.')) return;
-    localStorage.removeItem(STORAGE_KEY);
-    renderTable();
+  // ── Render table ← Supabase SELECT
+  async function renderTable() {
+    const spinner  = document.getElementById('tableSpinner');
+    const tbody    = document.getElementById('tableBody');
+    const emptyEl  = document.getElementById('emptyState');
+    const countEl  = document.getElementById('entryCount');
+
+    spinner.classList.add('show');
+    tbody.innerHTML = '';
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=id.desc`,
+        { headers }
+      );
+
+      if (!res.ok) throw new Error(await res.text());
+
+      const entries = await res.json();
+      countEl.textContent = entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
+
+      if (entries.length === 0) {
+        emptyEl.style.display = 'block';
+      } else {
+        emptyEl.style.display = 'none';
+        entries.forEach((e, i) => {
+          const badgeClass = e.status === 'Checked Out' ? 'out' : 'in';
+          const ts = new Date(e.ts).toLocaleString('en-CA', {
+            year: 'numeric', month: 'short', day: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          });
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td style="color:var(--muted);font-size:0.75rem">${entries.length - i}</td>
+            <td><strong>Box ${e.box}</strong></td>
+            <td>${e.entire_box}</td>
+            <td><span class="badge ${badgeClass}">${e.status}</span></td>
+            <td style="color:var(--muted);font-size:0.78rem">${ts}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      }
+    } catch (err) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load data: ${err.message}</td></tr>`;
+    } finally {
+      spinner.classList.remove('show');
+    }
   }
 
-  // ── QR Code generation
+  // ── Clear all rows
+  async function clearTable() {
+    if (!confirm('Delete ALL entries from the shared database? This cannot be undone.')) return;
+
+    const spinner = document.getElementById('tableSpinner');
+    spinner.classList.add('show');
+
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/${TABLE}?id=gte.0`,
+        { method: 'DELETE', headers }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      renderTable();
+    } catch (e) {
+      alert('Error clearing table: ' + e.message);
+      spinner.classList.remove('show');
+    }
+  }
+
+  // ── QR Code
   function generateQR() {
-    const url = window.location.href.split('?')[0]; // clean URL
+    const url = window.location.href.split('?')[0];
     document.getElementById('urlDisplay').textContent = url;
     new QRCode(document.getElementById('qrcode'), {
       text: url,
-      width: 200,
-      height: 200,
+      width: 200, height: 200,
       colorDark: '#2a2a2a',
       colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.H
     });
   }
 
-  // ── Init
   generateQR();
-  renderTable();
 </script>
 </body>
 </html>
