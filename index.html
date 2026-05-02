@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Box Tracker</title>
+<title>PEO Algonquin Chapter – Storage</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
@@ -59,7 +59,7 @@
   }
 
   .app-container {
-    max-width: 900px;
+    max-width: 980px;
     margin: 40px auto;
     padding: 0 20px;
     display: grid;
@@ -72,20 +72,22 @@
     width: fit-content;
     background: var(--border);
     gap: 2px;
+    flex-wrap: wrap;
   }
 
   .tab-btn {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 1px;
+    letter-spacing: 0.8px;
     text-transform: uppercase;
-    padding: 10px 22px;
+    padding: 10px 18px;
     border: none;
     cursor: pointer;
     background: var(--border);
     color: #aaa;
     transition: all 0.15s;
+    white-space: nowrap;
   }
 
   .tab-btn.active { background: var(--accent); color: #fff; }
@@ -134,7 +136,7 @@
     font-weight: 700;
   }
 
-  select {
+  select, input[type="text"] {
     width: 100%;
     padding: 12px 16px;
     font-family: 'IBM Plex Mono', monospace;
@@ -142,15 +144,25 @@
     border: 2px solid var(--border);
     background: #fff;
     color: var(--text);
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+
+  select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232a2a2a' stroke-width='2' fill='none'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 14px center;
+    background-color: #fff;
     cursor: pointer;
-    transition: border-color 0.15s, box-shadow 0.15s;
   }
 
-  select:focus { outline: none; border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
+  select:focus, input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 3px 3px 0 var(--accent);
+  }
+
+  input[type="text"]::placeholder { color: #bbb; }
 
   .submit-btn {
     width: 100%;
@@ -211,9 +223,10 @@
     color: var(--bg);
     padding: 12px 18px;
     text-align: left;
-    letter-spacing: 2px;
+    letter-spacing: 1.5px;
     text-transform: uppercase;
     font-size: 0.7rem;
+    white-space: nowrap;
   }
 
   .data-table td {
@@ -235,8 +248,9 @@
     border: 1.5px solid;
   }
 
-  .badge.out { color: var(--accent); border-color: var(--accent); background: #fff0eb; }
-  .badge.in  { color: var(--accent2); border-color: var(--accent2); background: #edf7f2; }
+  .badge.out    { color: var(--accent);  border-color: var(--accent);  background: #fff0eb; }
+  .badge.in     { color: var(--accent2); border-color: var(--accent2); background: #edf7f2; }
+  .badge.all-in { color: var(--accent2); border-color: var(--accent2); background: #edf7f2; }
 
   .empty-state {
     text-align: center;
@@ -281,7 +295,6 @@
 
   .refresh-btn { border-color: var(--accent2); color: var(--accent2); }
   .refresh-btn:hover { background: var(--accent2); color: #fff; }
-
   .clear-btn { border-color: #cc0000; color: #cc0000; }
   .clear-btn:hover { background: #cc0000; color: #fff; }
 
@@ -292,14 +305,12 @@
     border-top-color: var(--accent);
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
-    margin: 0 auto;
   }
 
   .spinner.show { display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* QR */
-  .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 36px; }
+  .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 36px 36px; }
   .qr-box { background: #fff; padding: 16px; border: 2px solid var(--border); box-shadow: var(--shadow); }
   .qr-instructions { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--muted); text-align: center; line-height: 1.6; max-width: 360px; }
   .url-display { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; background: #fff; border: 1.5px solid #ccc; padding: 10px 14px; word-break: break-all; color: var(--text); max-width: 100%; text-align: center; }
@@ -309,10 +320,21 @@
   .panel { display: none; }
   .panel.active { display: block; }
 
-  @media (max-width: 600px) {
+  code {
+    display: block;
+    background: #f0ece4;
+    padding: 12px;
+    font-size: 0.72rem;
+    line-height: 1.6;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    white-space: pre;
+  }
+
+  @media (max-width: 640px) {
     .card { padding: 22px 18px; }
     .app-container { margin: 20px auto; }
-    .tab-btn { padding: 10px 14px; font-size: 0.7rem; }
+    .tab-btn { padding: 9px 12px; font-size: 0.68rem; }
   }
 
   @media print {
@@ -327,7 +349,7 @@
 
 <header>
   <div>
-    <div class="logo">BOX<span>TRACK</span></div>
+    <div class="logo">PEO <span>Algonquin Chapter</span></div>
     <div class="subtitle">Storage Management System</div>
   </div>
 </header>
@@ -335,12 +357,13 @@
 <div class="app-container">
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('form', this)">📦 Log Action</button>
-    <button class="tab-btn" onclick="switchTab('table', this)">📋 Storage Table</button>
-    <button class="tab-btn" onclick="switchTab('qr', this)">🔗 QR Code</button>
+    <button class="tab-btn active" onclick="switchTab('form',      this)">📦 Log Action</button>
+    <button class="tab-btn"        onclick="switchTab('additem',   this)">➕ Add New Item</button>
+    <button class="tab-btn"        onclick="switchTab('inventory', this)">📋 Inventory Status</button>
+    <button class="tab-btn"        onclick="switchTab('qr',        this)">🔗 QR Code</button>
   </div>
 
-  <!-- FORM PANEL -->
+  <!-- ══ TAB 1 – LOG ACTION ══ -->
   <div class="panel active card" id="panel-form">
     <div class="card-title">Log a Box Action</div>
 
@@ -371,42 +394,59 @@
       </select>
     </div>
 
-    <button class="submit-btn" id="submitBtn" onclick="submitForm()">▶ Submit Entry</button>
-    <div class="toast" id="toast"></div>
+    <button class="submit-btn" id="submitBtn" onclick="submitLogAction()">▶ Submit Entry</button>
+    <div class="toast" id="toastForm"></div>
   </div>
 
-  <!-- TABLE PANEL -->
-  <div class="panel card" id="panel-table">
-    <div class="card-title">Storage Records</div>
+  <!-- ══ TAB 2 – ADD NEW ITEM ══ -->
+  <div class="panel card" id="panel-additem">
+    <div class="card-title">Add New Item to Inventory</div>
+
+    <div class="form-row">
+      <label><span class="q-num">A</span>Box Name or Description</label>
+      <input type="text" id="newBoxName" placeholder="e.g. Box A – Kitchen supplies" />
+    </div>
+
+    <div class="form-row">
+      <label><span class="q-num">B</span>Items</label>
+      <input type="text" id="newItems" placeholder="e.g. Plates, cups, tablecloths" />
+    </div>
+
+    <button class="submit-btn" id="addItemBtn" onclick="submitNewItem()">▶ Add to Inventory</button>
+    <div class="toast" id="toastAddItem"></div>
+  </div>
+
+  <!-- ══ TAB 3 – INVENTORY STATUS ══ -->
+  <div class="panel card" id="panel-inventory">
+    <div class="card-title">Inventory Status</div>
     <div class="table-toolbar">
-      <div class="entry-count" id="entryCount">— entries</div>
+      <div class="entry-count" id="invCount">— entries</div>
       <div class="toolbar-right">
-        <span class="spinner" id="tableSpinner"></span>
-        <button class="refresh-btn" onclick="renderTable()">↻ Refresh</button>
-        <button class="clear-btn" onclick="clearTable()">✕ Clear All</button>
+        <span class="spinner" id="invSpinner"></span>
+        <button class="refresh-btn" onclick="renderInventory()">↻ Refresh</button>
+        <button class="clear-btn"   onclick="clearInventory()">✕ Clear All</button>
       </div>
     </div>
     <div class="table-wrap">
       <table class="data-table">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Box</th>
-            <th>Entire Box</th>
+            <th>Box Name or Description</th>
+            <th>Items</th>
             <th>Status</th>
-            <th>Timestamp</th>
+            <th>Time of Last Status Change</th>
           </tr>
         </thead>
-        <tbody id="tableBody"></tbody>
+        <tbody id="invBody"></tbody>
       </table>
-      <div class="empty-state" id="emptyState" style="display:none">
+      <div class="empty-state" id="invEmpty" style="display:none">
         <div class="icon">📭</div>
-        No entries yet. Scan the QR code or use the form to log a box action.
+        No inventory entries yet. Use "Add New Item" to get started.
       </div>
     </div>
   </div>
 
-  <!-- QR PANEL -->
+  <!-- ══ TAB 4 – QR CODE ══ -->
   <div class="panel card" id="panel-qr">
     <div class="card-title">QR Code for This Page</div>
     <div class="qr-panel">
@@ -414,7 +454,7 @@
       <div class="url-display" id="urlDisplay"></div>
       <div class="qr-instructions">
         Print or display this QR code at your storage location.<br>
-        Anyone who scans it will land directly on the logging form.<br><br>
+        Anyone who scans it lands directly on the logging form.<br><br>
         All submissions feed into one shared database.
       </div>
       <button class="print-btn" onclick="window.print()">🖨 Print QR Code</button>
@@ -424,10 +464,10 @@
 </div>
 
 <script>
-  // ── Supabase config
   const SUPABASE_URL = 'https://lisimvtheamxhfqvzirz.supabase.co';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpc2ltdnRoZWFteGhmcXZ6aXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mzk0MzYsImV4cCI6MjA5MzMxNTQzNn0.KInfxkNY9sHhSN7xJS9AB4ZexXddKcJBC1aOF1ropVA';
-  const TABLE = 'box_logs';
+  const LOG_TABLE = 'box_logs';
+  const INV_TABLE = 'inventory';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -442,122 +482,164 @@
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('panel-' + name).classList.add('active');
     btn.classList.add('active');
-    if (name === 'table') renderTable();
+    if (name === 'inventory') renderInventory();
   }
 
-  // ── Show toast
-  function showToast(msg, type = 'success') {
-    const t = document.getElementById('toast');
+  // ── Toast
+  function showToast(id, msg, type = 'success') {
+    const t = document.getElementById(id);
     t.textContent = msg;
     t.className = 'toast ' + type + ' show';
     setTimeout(() => t.classList.remove('show'), 4000);
   }
 
-  // ── Submit form → Supabase INSERT
-  async function submitForm() {
+  // ── Format timestamp
+  function fmtTs(iso) {
+    return new Date(iso).toLocaleString('en-CA', {
+      year: 'numeric', month: 'short', day: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  // ── XSS helper
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // ══ TAB 1 – LOG ACTION ══
+  async function submitLogAction() {
     const box    = document.getElementById('boxName').value;
     const entire = document.getElementById('entireBox').value;
     const action = document.getElementById('action').value;
 
     if (!box || !entire || !action) {
-      showToast('⚠ Please answer all three questions.', 'error');
+      showToast('toastForm', '⚠ Please answer all three questions.', 'error');
       return;
     }
 
     const status = action === 'pick up' ? 'Checked Out' : 'In Storage';
     const btn = document.getElementById('submitBtn');
-    btn.disabled = true;
-    btn.textContent = 'Saving…';
+    btn.disabled = true; btn.textContent = 'Saving…';
 
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
-        method: 'POST',
-        headers,
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${LOG_TABLE}`, {
+        method: 'POST', headers,
         body: JSON.stringify({ box, entire_box: entire, status })
       });
-
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || res.statusText);
-      }
-
-      document.getElementById('boxName').value  = '';
+      if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
+      document.getElementById('boxName').value   = '';
       document.getElementById('entireBox').value = '';
-      document.getElementById('action').value   = '';
-      showToast('✔ Entry recorded successfully!', 'success');
+      document.getElementById('action').value    = '';
+      showToast('toastForm', '✔ Entry recorded successfully!', 'success');
     } catch (e) {
-      showToast('✖ Error saving: ' + e.message, 'error');
+      showToast('toastForm', '✖ Error: ' + e.message, 'error');
     } finally {
-      btn.disabled = false;
-      btn.textContent = '▶ Submit Entry';
+      btn.disabled = false; btn.textContent = '▶ Submit Entry';
     }
   }
 
-  // ── Render table ← Supabase SELECT
-  async function renderTable() {
-    const spinner  = document.getElementById('tableSpinner');
-    const tbody    = document.getElementById('tableBody');
-    const emptyEl  = document.getElementById('emptyState');
-    const countEl  = document.getElementById('entryCount');
+  // ══ TAB 2 – ADD NEW ITEM ══
+  async function submitNewItem() {
+    const box_name = document.getElementById('newBoxName').value.trim();
+    const items    = document.getElementById('newItems').value.trim();
+
+    if (!box_name || !items) {
+      showToast('toastAddItem', '⚠ Please fill in both fields.', 'error');
+      return;
+    }
+
+    const btn = document.getElementById('addItemBtn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}`, {
+        method: 'POST', headers,
+        body: JSON.stringify({
+          box_name,
+          items,
+          status: 'All In',
+          last_changed: new Date().toISOString()
+        })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
+      document.getElementById('newBoxName').value = '';
+      document.getElementById('newItems').value   = '';
+      showToast('toastAddItem', '✔ Item added to inventory!', 'success');
+    } catch (e) {
+      showToast('toastAddItem', '✖ Error: ' + e.message, 'error');
+    } finally {
+      btn.disabled = false; btn.textContent = '▶ Add to Inventory';
+    }
+  }
+
+  // ══ TAB 3 – INVENTORY STATUS ══
+  async function renderInventory() {
+    const spinner = document.getElementById('invSpinner');
+    const tbody   = document.getElementById('invBody');
+    const emptyEl = document.getElementById('invEmpty');
+    const countEl = document.getElementById('invCount');
 
     spinner.classList.add('show');
     tbody.innerHTML = '';
 
     try {
       const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/${TABLE}?select=*&order=id.desc`,
+        `${SUPABASE_URL}/rest/v1/${INV_TABLE}?select=*&order=id.desc`,
         { headers }
       );
-
       if (!res.ok) throw new Error(await res.text());
 
-      const entries = await res.json();
-      countEl.textContent = entries.length + ' entr' + (entries.length === 1 ? 'y' : 'ies');
+      const rows = await res.json();
+      countEl.textContent = rows.length + ' entr' + (rows.length === 1 ? 'y' : 'ies');
 
-      if (entries.length === 0) {
+      if (rows.length === 0) {
         emptyEl.style.display = 'block';
       } else {
         emptyEl.style.display = 'none';
-        entries.forEach((e, i) => {
-          const badgeClass = e.status === 'Checked Out' ? 'out' : 'in';
-          const ts = new Date(e.ts).toLocaleString('en-CA', {
-            year: 'numeric', month: 'short', day: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-          });
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td style="color:var(--muted);font-size:0.75rem">${entries.length - i}</td>
-            <td><strong>Box ${e.box}</strong></td>
-            <td>${e.entire_box}</td>
-            <td><span class="badge ${badgeClass}">${e.status}</span></td>
-            <td style="color:var(--muted);font-size:0.78rem">${ts}</td>
+        rows.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong>${esc(r.box_name)}</strong></td>
+            <td>${esc(r.items)}</td>
+            <td><span class="badge all-in">${esc(r.status)}</span></td>
+            <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
           `;
-          tbody.appendChild(row);
+          tbody.appendChild(tr);
         });
       }
     } catch (err) {
-      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load data: ${err.message}</td></tr>`;
+      tbody.innerHTML = `
+        <tr><td colspan="4" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px;line-height:1.8">
+          ⚠ Could not load inventory: ${esc(err.message)}<br><br>
+          <strong>One-time setup needed.</strong> Run this SQL in your Supabase SQL Editor:
+          <code>create table inventory (
+  id bigint generated always as identity primary key,
+  box_name text,
+  items text,
+  status text default 'All In',
+  last_changed timestamptz default now()
+);
+alter table inventory enable row level security;
+create policy "Allow all" on inventory
+  for all using (true) with check (true);</code>
+        </td></tr>`;
     } finally {
       spinner.classList.remove('show');
     }
   }
 
-  // ── Clear all rows
-  async function clearTable() {
-    if (!confirm('Delete ALL entries from the shared database? This cannot be undone.')) return;
-
-    const spinner = document.getElementById('tableSpinner');
+  async function clearInventory() {
+    if (!confirm('Delete ALL inventory entries? This cannot be undone.')) return;
+    const spinner = document.getElementById('invSpinner');
     spinner.classList.add('show');
-
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/${TABLE}?id=gte.0`,
-        { method: 'DELETE', headers }
-      );
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=gte.0`, { method: 'DELETE', headers });
       if (!res.ok) throw new Error(await res.text());
-      renderTable();
+      renderInventory();
     } catch (e) {
-      alert('Error clearing table: ' + e.message);
+      alert('Error clearing inventory: ' + e.message);
       spinner.classList.remove('show');
     }
   }
@@ -567,10 +649,8 @@
     const url = window.location.href.split('?')[0];
     document.getElementById('urlDisplay').textContent = url;
     new QRCode(document.getElementById('qrcode'), {
-      text: url,
-      width: 200, height: 200,
-      colorDark: '#2a2a2a',
-      colorLight: '#ffffff',
+      text: url, width: 200, height: 200,
+      colorDark: '#2a2a2a', colorLight: '#ffffff',
       correctLevel: QRCode.CorrectLevel.H
     });
   }
