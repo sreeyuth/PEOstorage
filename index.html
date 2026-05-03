@@ -105,7 +105,13 @@
     background: var(--border); color: var(--bg); padding: 12px 16px;
     text-align: left; letter-spacing: 1.2px; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap;
   }
+  .data-table col.col-box    { width: 17%; }
+  .data-table col.col-items  { width: 36%; }
+  .data-table col.col-status { width: 15%; }
+  .data-table col.col-ts     { width: 20%; }
+  .data-table col.col-act    { width: 12%; }
   .data-table td { padding: 10px 16px; border-bottom: 1px solid #ddd; vertical-align: middle; }
+  .data-table td.cell-items { white-space: normal; line-height: 1.55; word-break: break-word; }
   .data-table tr:last-child td { border-bottom: none; }
   .data-table tr:not(.editing):hover td { background: #ece6db; }
 
@@ -266,6 +272,13 @@
     </div>
     <div class="table-wrap">
       <table class="data-table">
+        <colgroup>
+          <col class="col-box">
+          <col class="col-items">
+          <col class="col-status">
+          <col class="col-ts">
+          <col class="col-act">
+        </colgroup>
         <thead>
           <tr>
             <th>Box Name or Description</th>
@@ -406,7 +419,7 @@
     tr.className = '';
     tr.innerHTML = `
       <td><strong>${esc(r.box_name)}</strong></td>
-      <td>${esc(r.items)}</td>
+      <td class="cell-items">${esc(r.items)}</td>
       <td><span class="badge ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>
@@ -431,7 +444,7 @@
     ).join('');
     tr.innerHTML = `
       <td><input class="inline-input" id="edit-box-${r.id}"    value="${esc(r.box_name)}" /></td>
-      <td><input class="inline-input" id="edit-items-${r.id}"  value="${esc(r.items)}" /></td>
+      <td class="cell-items"><input class="inline-input" id="edit-items-${r.id}"  value="${esc(r.items)}" /></td>
       <td><select class="inline-select" id="edit-status-${r.id}">${optHtml}</select></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>
