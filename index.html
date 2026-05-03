@@ -131,6 +131,31 @@
   }
   .inline-select:focus { outline: none; }
 
+  /* PIN LOCK */
+  .pin-bar {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+  .pin-input {
+    width: 110px; padding: 8px 12px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 1.1rem; letter-spacing: 6px; border: 2px solid var(--border);
+    background: #fff; color: var(--text); text-align: center;
+  }
+  .pin-input:focus { outline: none; border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
+  .pin-btn {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase; padding: 8px 16px;
+    border: 2px solid var(--border); background: var(--border); color: var(--bg);
+    cursor: pointer; transition: all 0.15s;
+  }
+  .pin-btn:hover { background: var(--accent); border-color: var(--accent); }
+  .pin-status {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600;
+    padding: 5px 12px; border: 1.5px solid; letter-spacing: 0.5px;
+  }
+  .pin-status.unlocked { color: #0a5c2a; border-color: #1a6b3c; background: #d4edda; }
+  .pin-status.locked   { color: #7a0000; border-color: #cc0000; background: #ffd5d5; }
+
   /* ROW ACTION BUTTONS */
   .row-actions { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
   .btn-edit, .btn-delete, .btn-save, .btn-cancel {
@@ -266,12 +291,18 @@
   <!-- ══ TAB 3 – INVENTORY STATUS ══ -->
   <div class="panel card" id="panel-inventory">
     <div class="card-title">Inventory Status</div>
+    <div class="pin-bar">
+      <input class="pin-input" type="password" id="invPin" maxlength="4" placeholder="••••"
+             oninput="checkPin()" onkeydown="if(event.key==='Enter')checkPin()" />
+      <button class="pin-btn" onclick="checkPin()">🔓 Unlock Editing</button>
+      <span class="pin-status locked" id="pinStatus">🔒 Read-only</span>
+    </div>
     <div class="table-toolbar">
       <div class="entry-count" id="invCount">— entries</div>
       <div class="toolbar-right">
         <span class="spinner" id="invSpinner"></span>
         <button class="refresh-btn" onclick="renderInventory()">↻ Refresh</button>
-        <button class="clear-btn"   onclick="clearInventory()">✕ Clear All</button>
+        <button class="clear-btn" id="clearAllBtn"  onclick="clearInventory()">✕ Clear All</button>
       </div>
     </div>
     <div class="table-wrap">
@@ -399,6 +430,25 @@
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
+  // ── PIN auth ─────────────────────────────────────────────────────────
+  let _invUnlocked = false;
+  const CORRECT_PIN = '2121';
+
+  function checkPin() {
+    const val = document.getElementById('invPin').value;
+    const statusEl = document.getElementById('pinStatus');
+    if (val === CORRECT_PIN) {
+      _invUnlocked = true;
+      statusEl.textContent = '🔓 Editing unlocked';
+      statusEl.className = 'pin-status unlocked';
+    } else {
+      _invUnlocked = false;
+      statusEl.textContent = '🔒 Read-only';
+      statusEl.className = 'pin-status locked';
+    }
+    renderInventory(); // re-render to show/hide edit buttons
+  }
+
   // ══ TAB 1 – CHECK IN / CHECK OUT ══════════════════════════════════
   function handleItemTypeChange() {
     const type = document.getElementById('cicoItemType').value;
@@ -496,17 +546,18 @@
   // Render a normal (read) row
   function renderReadRow(tr, r) {
     tr.className = '';
+    const actionCell = _invUnlocked
+      ? `<div class="row-actions">
+           <button class="btn-edit"   onclick="startEdit(this, ${r.id})">✏ Edit</button>
+           <button class="btn-delete" onclick="deleteRow(this, ${r.id})">🗑 Delete</button>
+         </div>`
+      : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`;
     tr.innerHTML = `
       <td><strong>${esc(r.box_name)}</strong></td>
       <td class="cell-items">${esc(r.items)}</td>
       <td><span class="badge ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
-      <td>
-        <div class="row-actions">
-          <button class="btn-edit"   onclick="startEdit(this, ${r.id})">✏ Edit</button>
-          <button class="btn-delete" onclick="deleteRow(this, ${r.id})">🗑 Delete</button>
-        </div>
-      </td>
+      <td>${actionCell}</td>
     `;
   }
 
@@ -566,7 +617,11 @@
       }
     } catch(err) {
       tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load inventory: ${esc(err.message)}</td></tr>`;
-    } finally { spinner.classList.remove('show'); }
+    } finally {
+      spinner.classList.remove('show');
+      const cb = document.getElementById('clearAllBtn');
+      if (cb) cb.style.display = _invUnlocked ? '' : 'none';
+    }
   }
 
   // ── Edit flow ──────────────────────────────────────────────────────
