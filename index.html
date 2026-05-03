@@ -39,277 +39,132 @@
     gap: 14px;
     border-bottom: 3px solid var(--accent);
   }
-
-  header .logo {
-    font-family: 'IBM Plex Mono', monospace;
-    font-weight: 700;
-    font-size: 1.4rem;
-    letter-spacing: -0.5px;
-  }
-
+  header .logo { font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
   header .logo span { color: var(--accent); }
+  header .subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
 
-  header .subtitle {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    color: #aaa;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-top: 2px;
-  }
+  .app-container { max-width: 1040px; margin: 40px auto; padding: 0 20px; display: grid; gap: 28px; }
 
-  .app-container {
-    max-width: 980px;
-    margin: 40px auto;
-    padding: 0 20px;
-    display: grid;
-    gap: 28px;
-  }
-
-  .tabs {
-    display: flex;
-    border: 2px solid var(--border);
-    width: fit-content;
-    background: var(--border);
-    gap: 2px;
-    flex-wrap: wrap;
-  }
-
+  /* TABS */
+  .tabs { display: flex; border: 2px solid var(--border); width: fit-content; background: var(--border); gap: 2px; flex-wrap: wrap; }
   .tab-btn {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    padding: 10px 18px;
-    border: none;
-    cursor: pointer;
-    background: var(--border);
-    color: #aaa;
-    transition: all 0.15s;
-    white-space: nowrap;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 600;
+    letter-spacing: 0.8px; text-transform: uppercase; padding: 10px 18px;
+    border: none; cursor: pointer; background: var(--border); color: #aaa;
+    transition: all 0.15s; white-space: nowrap;
   }
-
   .tab-btn.active { background: var(--accent); color: #fff; }
 
-  .card {
-    background: var(--surface);
-    border: 2px solid var(--border);
-    box-shadow: var(--shadow);
-    padding: 36px;
-  }
-
+  /* CARD */
+  .card { background: var(--surface); border: 2px solid var(--border); box-shadow: var(--shadow); padding: 36px; }
   .card-title {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 28px;
+    display: flex; align-items: center; gap: 10px;
   }
-
   .card-title::after { content: ''; flex: 1; height: 1px; background: #ddd; }
 
+  /* FORM */
   .form-row { margin-bottom: 22px; }
-
-  label {
-    display: block;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    margin-bottom: 8px;
-    color: var(--text);
-  }
-
-  label .q-num {
-    display: inline-block;
-    background: var(--border);
-    color: var(--bg);
-    font-size: 0.65rem;
-    width: 18px; height: 18px; line-height: 18px;
-    text-align: center;
-    margin-right: 8px;
-    font-weight: 700;
-  }
+  label { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.5px; margin-bottom: 8px; color: var(--text); }
+  label .q-num { display: inline-block; background: var(--border); color: var(--bg); font-size: 0.65rem; width: 18px; height: 18px; line-height: 18px; text-align: center; margin-right: 8px; font-weight: 700; }
 
   select, input[type="text"] {
-    width: 100%;
-    padding: 12px 16px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem;
-    border: 2px solid var(--border);
-    background: #fff;
-    color: var(--text);
+    width: 100%; padding: 12px 16px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem; border: 2px solid var(--border); background: #fff; color: var(--text);
     transition: border-color 0.15s, box-shadow 0.15s;
   }
-
   select {
     appearance: none;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232a2a2a' stroke-width='2' fill='none'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    background-color: #fff;
-    cursor: pointer;
+    background-repeat: no-repeat; background-position: right 14px center; background-color: #fff; cursor: pointer;
   }
-
-  select:focus, input[type="text"]:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 3px 3px 0 var(--accent);
-  }
-
+  select:focus, input[type="text"]:focus { outline: none; border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
   input[type="text"]::placeholder { color: #bbb; }
 
   .submit-btn {
-    width: 100%;
-    padding: 16px;
-    margin-top: 8px;
-    background: var(--border);
-    color: var(--bg);
-    border: 2px solid var(--border);
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.9rem;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.15s;
+    width: 100%; padding: 16px; margin-top: 8px; background: var(--border); color: var(--bg);
+    border: 2px solid var(--border); font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem;
+    font-weight: 700; letter-spacing: 2px; text-transform: uppercase; cursor: pointer; transition: all 0.15s;
   }
-
-  .submit-btn:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    box-shadow: 4px 4px 0 #8a2500;
-    transform: translate(-1px, -1px);
-  }
-
+  .submit-btn:hover { background: var(--accent); border-color: var(--accent); box-shadow: 4px 4px 0 #8a2500; transform: translate(-1px,-1px); }
   .submit-btn:active { transform: translate(1px,1px); box-shadow: 2px 2px 0 #8a2500; }
   .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-  .toast {
-    display: none;
-    padding: 14px 20px;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-    border: 2px solid;
-    margin-top: 16px;
-    animation: slideIn 0.25s ease;
-  }
-
+  /* TOAST */
+  .toast { display: none; padding: 14px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; border: 2px solid; margin-top: 16px; animation: slideIn 0.25s ease; }
   .toast.success { background: var(--accent2); color: #fff; border-color: #0d4a28; box-shadow: 3px 3px 0 #0d4a28; }
   .toast.error   { background: #fff0eb; color: var(--accent); border-color: var(--accent); box-shadow: 3px 3px 0 #8a2500; }
   .toast.show    { display: block; }
+  @keyframes slideIn { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
+  /* TABLE */
   .table-wrap { overflow-x: auto; }
-
-  .data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.85rem;
-  }
-
+  .data-table { width: 100%; border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; }
   .data-table th {
-    background: var(--border);
-    color: var(--bg);
-    padding: 12px 18px;
-    text-align: left;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    white-space: nowrap;
+    background: var(--border); color: var(--bg); padding: 12px 16px;
+    text-align: left; letter-spacing: 1.2px; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap;
   }
-
-  .data-table td {
-    padding: 12px 18px;
-    border-bottom: 1px solid #ddd;
-    vertical-align: middle;
-  }
-
+  .data-table td { padding: 10px 16px; border-bottom: 1px solid #ddd; vertical-align: middle; }
   .data-table tr:last-child td { border-bottom: none; }
-  .data-table tr:hover td { background: #ece6db; }
+  .data-table tr:not(.editing):hover td { background: #ece6db; }
 
-  .badge {
-    display: inline-block;
-    padding: 4px 10px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border: 1.5px solid;
+  /* BADGES */
+  .badge { display: inline-block; padding: 5px 10px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; border: 1.5px solid; white-space: nowrap; }
+  .badge.checked-in      { color: #0a5c2a; border-color: #1a6b3c; background: #d4edda; }
+  .badge.checked-out     { color: #7a0000; border-color: #cc0000; background: #ffd5d5; }
+  .badge.partial         { color: #7a3c00; border-color: #c45e00; background: #ffe5c0; }
+
+  /* Inline status select in edit mode */
+  .inline-select {
+    padding: 5px 8px; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem;
+    border: 1.5px solid var(--accent); background: #fffdf7; color: var(--text);
+    box-shadow: 2px 2px 0 var(--accent); cursor: pointer; width: 100%; min-width: 180px;
   }
+  .inline-select:focus { outline: none; }
 
-  .badge.out    { color: var(--accent);  border-color: var(--accent);  background: #fff0eb; }
-  .badge.in     { color: var(--accent2); border-color: var(--accent2); background: #edf7f2; }
-  .badge.all-in { color: var(--accent2); border-color: var(--accent2); background: #edf7f2; }
-
-  .empty-state {
-    text-align: center;
-    padding: 48px 20px;
-    font-family: 'IBM Plex Mono', monospace;
-    color: var(--muted);
-    font-size: 0.85rem;
+  /* ROW ACTION BUTTONS */
+  .row-actions { display: flex; gap: 5px; white-space: nowrap; }
+  .btn-edit, .btn-delete, .btn-save, .btn-cancel {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; font-weight: 700;
+    letter-spacing: 0.6px; text-transform: uppercase; padding: 4px 9px;
+    border: 1.5px solid; background: transparent; cursor: pointer; transition: all 0.12s;
   }
+  .btn-edit   { color: #1a5fa8; border-color: #1a5fa8; }
+  .btn-edit:hover   { background: #1a5fa8; color: #fff; }
+  .btn-delete { color: #cc0000; border-color: #cc0000; }
+  .btn-delete:hover { background: #cc0000; color: #fff; }
+  .btn-save   { color: var(--accent2); border-color: var(--accent2); }
+  .btn-save:hover   { background: var(--accent2); color: #fff; }
+  .btn-cancel { color: var(--muted); border-color: #999; }
+  .btn-cancel:hover { background: #999; color: #fff; }
 
+  /* Inline edit inputs */
+  .inline-input {
+    width: 100%; min-width: 110px; padding: 5px 8px;
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem;
+    border: 1.5px solid var(--accent); background: #fffdf7; color: var(--text);
+    box-shadow: 2px 2px 0 var(--accent);
+  }
+  .inline-input:focus { outline: none; }
+  tr.editing td { background: #fff8e6 !important; }
+
+  /* MISC */
+  .empty-state { text-align: center; padding: 48px 20px; font-family: 'IBM Plex Mono', monospace; color: var(--muted); font-size: 0.85rem; }
   .empty-state .icon { font-size: 2.5rem; margin-bottom: 12px; }
-
-  .table-toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 14px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .entry-count {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
-
+  .table-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px; }
+  .entry-count { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--muted); letter-spacing: 1px; }
   .toolbar-right { display: flex; gap: 10px; align-items: center; }
-
-  .refresh-btn, .clear-btn {
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
-    padding: 6px 14px;
-    border: 1.5px solid;
-    background: transparent;
-    cursor: pointer;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    font-weight: 600;
-    transition: all 0.15s;
-  }
-
+  .refresh-btn, .clear-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; padding: 6px 14px; border: 1.5px solid; background: transparent; cursor: pointer; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; transition: all 0.15s; }
   .refresh-btn { border-color: var(--accent2); color: var(--accent2); }
   .refresh-btn:hover { background: var(--accent2); color: #fff; }
   .clear-btn { border-color: #cc0000; color: #cc0000; }
   .clear-btn:hover { background: #cc0000; color: #fff; }
-
-  .spinner {
-    display: none;
-    width: 16px; height: 16px;
-    border: 2px solid #ddd;
-    border-top-color: var(--accent);
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
+  .spinner { display: none; width: 16px; height: 16px; border: 2px solid #ddd; border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
   .spinner.show { display: inline-block; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* QR */
   .qr-panel { display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px 36px 36px; }
   .qr-box { background: #fff; padding: 16px; border: 2px solid var(--border); box-shadow: var(--shadow); }
   .qr-instructions { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--muted); text-align: center; line-height: 1.6; max-width: 360px; }
@@ -320,21 +175,10 @@
   .panel { display: none; }
   .panel.active { display: block; }
 
-  code {
-    display: block;
-    background: #f0ece4;
-    padding: 12px;
-    font-size: 0.72rem;
-    line-height: 1.6;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-    white-space: pre;
-  }
-
   @media (max-width: 640px) {
-    .card { padding: 22px 18px; }
+    .card { padding: 22px 16px; }
     .app-container { margin: 20px auto; }
-    .tab-btn { padding: 9px 12px; font-size: 0.68rem; }
+    .tab-btn { padding: 9px 11px; font-size: 0.67rem; }
   }
 
   @media print {
@@ -366,7 +210,6 @@
   <!-- ══ TAB 1 – LOG ACTION ══ -->
   <div class="panel active card" id="panel-form">
     <div class="card-title">Log a Box Action</div>
-
     <div class="form-row">
       <label><span class="q-num">A</span>Box Name</label>
       <select id="boxName">
@@ -375,7 +218,6 @@
         <option>D</option><option>E</option><option>F</option><option>G</option>
       </select>
     </div>
-
     <div class="form-row">
       <label><span class="q-num">B</span>Entire Box?</label>
       <select id="entireBox">
@@ -384,7 +226,6 @@
         <option value="No">No</option>
       </select>
     </div>
-
     <div class="form-row">
       <label><span class="q-num">C</span>Action</label>
       <select id="action">
@@ -393,7 +234,6 @@
         <option value="drop off">Drop Off</option>
       </select>
     </div>
-
     <button class="submit-btn" id="submitBtn" onclick="submitLogAction()">▶ Submit Entry</button>
     <div class="toast" id="toastForm"></div>
   </div>
@@ -401,17 +241,14 @@
   <!-- ══ TAB 2 – ADD NEW ITEM ══ -->
   <div class="panel card" id="panel-additem">
     <div class="card-title">Add New Item to Inventory</div>
-
     <div class="form-row">
       <label><span class="q-num">A</span>Box Name or Description</label>
       <input type="text" id="newBoxName" placeholder="e.g. Box A – Kitchen supplies" />
     </div>
-
     <div class="form-row">
       <label><span class="q-num">B</span>Items</label>
       <input type="text" id="newItems" placeholder="e.g. Plates, cups, tablecloths" />
     </div>
-
     <button class="submit-btn" id="addItemBtn" onclick="submitNewItem()">▶ Add to Inventory</button>
     <div class="toast" id="toastAddItem"></div>
   </div>
@@ -435,6 +272,7 @@
             <th>Items</th>
             <th>Status</th>
             <th>Time of Last Status Change</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="invBody"></tbody>
@@ -476,7 +314,7 @@
     'Prefer': 'return=representation'
   };
 
-  // ── Tab switching
+  // ── Utilities ────────────────────────────────────────────────────────
   function switchTab(name, btn) {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -485,7 +323,6 @@
     if (name === 'inventory') renderInventory();
   }
 
-  // ── Toast
   function showToast(id, msg, type = 'success') {
     const t = document.getElementById(id);
     t.textContent = msg;
@@ -493,7 +330,6 @@
     setTimeout(() => t.classList.remove('show'), 4000);
   }
 
-  // ── Format timestamp
   function fmtTs(iso) {
     return new Date(iso).toLocaleString('en-CA', {
       year: 'numeric', month: 'short', day: 'numeric',
@@ -501,132 +337,207 @@
     });
   }
 
-  // ── XSS helper
   function esc(str) {
     return String(str ?? '')
       .replace(/&/g,'&amp;').replace(/</g,'&lt;')
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ══ TAB 1 – LOG ACTION ══
+  // ══ TAB 1 – LOG ACTION ══════════════════════════════════════════════
   async function submitLogAction() {
     const box    = document.getElementById('boxName').value;
     const entire = document.getElementById('entireBox').value;
     const action = document.getElementById('action').value;
-
-    if (!box || !entire || !action) {
-      showToast('toastForm', '⚠ Please answer all three questions.', 'error');
-      return;
-    }
-
+    if (!box || !entire || !action) { showToast('toastForm','⚠ Please answer all three questions.','error'); return; }
     const status = action === 'pick up' ? 'Checked Out' : 'In Storage';
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
-
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/${LOG_TABLE}`, {
-        method: 'POST', headers,
-        body: JSON.stringify({ box, entire_box: entire, status })
+        method:'POST', headers, body: JSON.stringify({ box, entire_box: entire, status })
       });
       if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
-      document.getElementById('boxName').value   = '';
+      document.getElementById('boxName').value = '';
       document.getElementById('entireBox').value = '';
-      document.getElementById('action').value    = '';
-      showToast('toastForm', '✔ Entry recorded successfully!', 'success');
-    } catch (e) {
-      showToast('toastForm', '✖ Error: ' + e.message, 'error');
-    } finally {
-      btn.disabled = false; btn.textContent = '▶ Submit Entry';
-    }
+      document.getElementById('action').value = '';
+      showToast('toastForm','✔ Entry recorded successfully!','success');
+    } catch(e) { showToast('toastForm','✖ Error: ' + e.message,'error'); }
+    finally { btn.disabled = false; btn.textContent = '▶ Submit Entry'; }
   }
 
-  // ══ TAB 2 – ADD NEW ITEM ══
+  // ══ TAB 2 – ADD NEW ITEM ════════════════════════════════════════════
   async function submitNewItem() {
     const box_name = document.getElementById('newBoxName').value.trim();
     const items    = document.getElementById('newItems').value.trim();
-
-    if (!box_name || !items) {
-      showToast('toastAddItem', '⚠ Please fill in both fields.', 'error');
-      return;
-    }
-
+    if (!box_name || !items) { showToast('toastAddItem','⚠ Please fill in both fields.','error'); return; }
     const btn = document.getElementById('addItemBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
-
     try {
       const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}`, {
-        method: 'POST', headers,
-        body: JSON.stringify({
-          box_name,
-          items,
-          status: 'All In',
-          last_changed: new Date().toISOString()
-        })
+        method:'POST', headers,
+        body: JSON.stringify({ box_name, items, status:'Checked In', last_changed: new Date().toISOString() })
       });
       if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
       document.getElementById('newBoxName').value = '';
-      document.getElementById('newItems').value   = '';
-      showToast('toastAddItem', '✔ Item added to inventory!', 'success');
-    } catch (e) {
-      showToast('toastAddItem', '✖ Error: ' + e.message, 'error');
-    } finally {
-      btn.disabled = false; btn.textContent = '▶ Add to Inventory';
-    }
+      document.getElementById('newItems').value = '';
+      showToast('toastAddItem','✔ Item added to inventory!','success');
+    } catch(e) { showToast('toastAddItem','✖ Error: ' + e.message,'error'); }
+    finally { btn.disabled = false; btn.textContent = '▶ Add to Inventory'; }
   }
 
-  // ══ TAB 3 – INVENTORY STATUS ══
+  // ══ TAB 3 – INVENTORY STATUS ════════════════════════════════════════
+
+  // Map status value → badge CSS class
+  function statusClass(s) {
+    if (s === 'Checked Out') return 'checked-out';
+    if (s === 'Partially Checked Out') return 'partial';
+    return 'checked-in'; // default
+  }
+
+  // Map status value → display label
+  function statusLabel(s) {
+    if (s === 'Checked Out') return 'Checked Out';
+    if (s === 'Partially Checked Out') return 'Partially Checked Out – Refer to Log';
+    return 'Checked In';
+  }
+
+  // Render a normal (read) row
+  function renderReadRow(tr, r) {
+    tr.className = '';
+    tr.innerHTML = `
+      <td><strong>${esc(r.box_name)}</strong></td>
+      <td>${esc(r.items)}</td>
+      <td><span class="badge ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
+      <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn-edit"   onclick="startEdit(this, ${r.id})">✏ Edit</button>
+          <button class="btn-delete" onclick="deleteRow(this, ${r.id})">🗑 Delete</button>
+        </div>
+      </td>
+    `;
+  }
+
+  // Render an edit row (inline inputs + status dropdown)
+  function renderEditRow(tr, r) {
+    tr.className = 'editing';
+    const opts = [
+      { val: 'Checked In',           label: 'Checked In' },
+      { val: 'Checked Out',          label: 'Checked Out' },
+      { val: 'Partially Checked Out',label: 'Partially Checked Out – Refer to Log' },
+    ];
+    const optHtml = opts.map(o =>
+      `<option value="${o.val}"${r.status === o.val ? ' selected' : ''}>${o.label}</option>`
+    ).join('');
+    tr.innerHTML = `
+      <td><input class="inline-input" id="edit-box-${r.id}"    value="${esc(r.box_name)}" /></td>
+      <td><input class="inline-input" id="edit-items-${r.id}"  value="${esc(r.items)}" /></td>
+      <td><select class="inline-select" id="edit-status-${r.id}">${optHtml}</select></td>
+      <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
+      <td>
+        <div class="row-actions">
+          <button class="btn-save"   onclick="saveEdit(this, ${r.id})">✔ Save</button>
+          <button class="btn-cancel" onclick="cancelEdit(this, ${r.id})">✕ Cancel</button>
+        </div>
+      </td>
+    `;
+    document.getElementById(`edit-box-${r.id}`).focus();
+  }
+
+  // Cache of loaded rows (so cancel can revert without a network call)
+  let _invCache = {};
+
   async function renderInventory() {
     const spinner = document.getElementById('invSpinner');
     const tbody   = document.getElementById('invBody');
     const emptyEl = document.getElementById('invEmpty');
     const countEl = document.getElementById('invCount');
-
     spinner.classList.add('show');
     tbody.innerHTML = '';
-
+    _invCache = {};
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/${INV_TABLE}?select=*&order=id.desc`,
-        { headers }
-      );
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?select=*&order=id.desc`, { headers });
       if (!res.ok) throw new Error(await res.text());
-
       const rows = await res.json();
       countEl.textContent = rows.length + ' entr' + (rows.length === 1 ? 'y' : 'ies');
-
       if (rows.length === 0) {
         emptyEl.style.display = 'block';
       } else {
         emptyEl.style.display = 'none';
         rows.forEach(r => {
+          _invCache[r.id] = r;
           const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td><strong>${esc(r.box_name)}</strong></td>
-            <td>${esc(r.items)}</td>
-            <td><span class="badge all-in">${esc(r.status)}</span></td>
-            <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
-          `;
+          tr.dataset.id = r.id;
+          renderReadRow(tr, r);
           tbody.appendChild(tr);
         });
       }
-    } catch (err) {
-      tbody.innerHTML = `
-        <tr><td colspan="4" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px;line-height:1.8">
-          ⚠ Could not load inventory: ${esc(err.message)}<br><br>
-          <strong>One-time setup needed.</strong> Run this SQL in your Supabase SQL Editor:
-          <code>create table inventory (
-  id bigint generated always as identity primary key,
-  box_name text,
-  items text,
-  status text default 'All In',
-  last_changed timestamptz default now()
-);
-alter table inventory enable row level security;
-create policy "Allow all" on inventory
-  for all using (true) with check (true);</code>
-        </td></tr>`;
-    } finally {
-      spinner.classList.remove('show');
+    } catch(err) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load inventory: ${esc(err.message)}</td></tr>`;
+    } finally { spinner.classList.remove('show'); }
+  }
+
+  // ── Edit flow ──────────────────────────────────────────────────────
+  function startEdit(btn, id) {
+    const tr = btn.closest('tr');
+    renderEditRow(tr, _invCache[id]);
+  }
+
+  function cancelEdit(btn, id) {
+    const tr = btn.closest('tr');
+    renderReadRow(tr, _invCache[id]);
+  }
+
+  async function saveEdit(btn, id) {
+    const tr       = btn.closest('tr');
+    const box_name = document.getElementById(`edit-box-${id}`).value.trim();
+    const items    = document.getElementById(`edit-items-${id}`).value.trim();
+    const status   = document.getElementById(`edit-status-${id}`).value;
+    if (!box_name || !items) { alert('Both fields are required.'); return; }
+
+    btn.textContent = '…'; btn.disabled = true;
+
+    const last_changed = new Date().toISOString();
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=eq.${id}`, {
+        method: 'PATCH', headers,
+        body: JSON.stringify({ box_name, items, status, last_changed })
+      });
+      if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
+
+      _invCache[id] = { ..._invCache[id], box_name, items, status, last_changed };
+      renderReadRow(tr, _invCache[id]);
+    } catch(e) {
+      btn.textContent = '✔ Save'; btn.disabled = false;
+      alert('Error saving: ' + e.message);
+    }
+  }
+
+  // ── Delete flow ────────────────────────────────────────────────────
+  async function deleteRow(btn, id) {
+    const r = _invCache[id];
+    if (!confirm(`Delete "${r.box_name}"?\nThis cannot be undone.`)) return;
+
+    btn.textContent = '…'; btn.disabled = true;
+    try {
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=eq.${id}`, {
+        method: 'DELETE', headers
+      });
+      if (!res.ok) throw new Error(await res.text());
+
+      const tr = btn.closest('tr');
+      tr.style.transition = 'opacity 0.3s';
+      tr.style.opacity = '0';
+      setTimeout(() => {
+        tr.remove();
+        delete _invCache[id];
+        const remaining = Object.keys(_invCache).length;
+        document.getElementById('invCount').textContent = remaining + ' entr' + (remaining === 1 ? 'y' : 'ies');
+        if (remaining === 0) document.getElementById('invEmpty').style.display = 'block';
+      }, 300);
+    } catch(e) {
+      btn.textContent = '🗑 Delete'; btn.disabled = false;
+      alert('Error deleting: ' + e.message);
     }
   }
 
@@ -635,16 +546,13 @@ create policy "Allow all" on inventory
     const spinner = document.getElementById('invSpinner');
     spinner.classList.add('show');
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=gte.0`, { method: 'DELETE', headers });
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=gte.0`, { method:'DELETE', headers });
       if (!res.ok) throw new Error(await res.text());
       renderInventory();
-    } catch (e) {
-      alert('Error clearing inventory: ' + e.message);
-      spinner.classList.remove('show');
-    }
+    } catch(e) { alert('Error clearing inventory: ' + e.message); spinner.classList.remove('show'); }
   }
 
-  // ── QR Code
+  // ── QR Code ──────────────────────────────────────────────────────────
   function generateQR() {
     const url = window.location.href.split('?')[0];
     document.getElementById('urlDisplay').textContent = url;
