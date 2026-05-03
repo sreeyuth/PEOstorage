@@ -120,6 +120,8 @@
   .badge.checked-in      { color: #0a5c2a; border-color: #1a6b3c; background: #d4edda; }
   .badge.checked-out     { color: #7a0000; border-color: #cc0000; background: #ffd5d5; }
   .badge.partial         { color: #7a3c00; border-color: #c45e00; background: #ffe5c0; }
+  .badge.act-in          { color: #0a5c2a; border-color: #1a6b3c; background: #d4edda; }
+  .badge.act-out         { color: #7a0000; border-color: #cc0000; background: #ffd5d5; }
 
   /* Inline status select in edit mode */
   .inline-select {
@@ -207,40 +209,41 @@
 <div class="app-container">
 
   <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('form',      this)">📦 Log Action</button>
+    <button class="tab-btn active" onclick="switchTab('form',      this)">🔄 Check In / Check Out</button>
     <button class="tab-btn"        onclick="switchTab('additem',   this)">➕ Add New Item</button>
     <button class="tab-btn"        onclick="switchTab('inventory', this)">📋 Inventory Status</button>
+    <button class="tab-btn"        onclick="switchTab('history',   this)">📜 Log History</button>
     <button class="tab-btn"        onclick="switchTab('qr',        this)">🔗 QR Code</button>
   </div>
 
-  <!-- ══ TAB 1 – LOG ACTION ══ -->
+  <!-- ══ TAB 1 – CHECK IN / CHECK OUT ══ -->
   <div class="panel active card" id="panel-form">
-    <div class="card-title">Log a Box Action</div>
+    <div class="card-title">Check In / Check Out</div>
     <div class="form-row">
-      <label><span class="q-num">A</span>Box Name</label>
-      <select id="boxName">
-        <option value="">— Select Box —</option>
-        <option>A</option><option>B</option><option>C</option>
-        <option>D</option><option>E</option><option>F</option><option>G</option>
-      </select>
+      <label><span class="q-num">A</span>Name</label>
+      <input type="text" id="cicoName" placeholder="Enter your name" />
     </div>
     <div class="form-row">
-      <label><span class="q-num">B</span>Entire Box?</label>
-      <select id="entireBox">
-        <option value="">— Select —</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-      </select>
-    </div>
-    <div class="form-row">
-      <label><span class="q-num">C</span>Action</label>
-      <select id="action">
+      <label><span class="q-num">B</span>Action</label>
+      <select id="cicoAction">
         <option value="">— Select Action —</option>
-        <option value="pick up">Pick Up</option>
-        <option value="drop off">Drop Off</option>
+        <option value="Checking In">Checking In</option>
+        <option value="Checking Out">Checking Out</option>
       </select>
     </div>
-    <button class="submit-btn" id="submitBtn" onclick="submitLogAction()">▶ Submit Entry</button>
+    <div class="form-row">
+      <label><span class="q-num">C</span>Item Type</label>
+      <select id="cicoItemType" onchange="handleItemTypeChange()">
+        <option value="">— Select Item Type —</option>
+        <option value="Entire Box">Entire Box</option>
+        <option value="Loose Items">Loose Items</option>
+      </select>
+    </div>
+    <div class="form-row" id="cicoDescRow" style="display:none">
+      <label><span class="q-num">D</span><span id="cicoDescLabel">Description</span></label>
+      <input type="text" id="cicoDesc" placeholder="" />
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="submitCico()">▶ Submit Entry</button>
     <div class="toast" id="toastForm"></div>
   </div>
 
@@ -297,7 +300,44 @@
     </div>
   </div>
 
-  <!-- ══ TAB 4 – QR CODE ══ -->
+  <!-- ══ TAB 4 – LOG HISTORY ══ -->
+  <div class="panel card" id="panel-history">
+    <div class="card-title">Log History</div>
+    <div class="table-toolbar">
+      <div class="entry-count" id="histCount">— entries</div>
+      <div class="toolbar-right">
+        <span class="spinner" id="histSpinner"></span>
+        <button class="refresh-btn" onclick="renderHistory()">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table" id="histTable">
+        <colgroup>
+          <col style="width:18%">
+          <col style="width:15%">
+          <col style="width:15%">
+          <col style="width:15%">
+          <col style="width:37%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Name</th>
+            <th>Action</th>
+            <th>Item</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody id="histBody"></tbody>
+      </table>
+      <div class="empty-state" id="histEmpty" style="display:none">
+        <div class="icon">📭</div>
+        No log entries yet. Use "Check In / Check Out" to record activity.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 5 – QR CODE ══ -->
   <div class="panel card" id="panel-qr">
     <div class="card-title">QR Code for This Page</div>
     <div class="qr-panel">
@@ -319,6 +359,7 @@
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpc2ltdnRoZWFteGhmcXZ6aXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mzk0MzYsImV4cCI6MjA5MzMxNTQzNn0.KInfxkNY9sHhSN7xJS9AB4ZexXddKcJBC1aOF1ropVA';
   const LOG_TABLE = 'box_logs';
   const INV_TABLE = 'inventory';
+  const LOG_HIST_TABLE = 'log_history';
 
   const headers = {
     'Content-Type': 'application/json',
@@ -334,6 +375,7 @@
     document.getElementById('panel-' + name).classList.add('active');
     btn.classList.add('active');
     if (name === 'inventory') renderInventory();
+    if (name === 'history') renderHistory();
   }
 
   function showToast(id, msg, type = 'success') {
@@ -356,23 +398,55 @@
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ══ TAB 1 – LOG ACTION ══════════════════════════════════════════════
-  async function submitLogAction() {
-    const box    = document.getElementById('boxName').value;
-    const entire = document.getElementById('entireBox').value;
-    const action = document.getElementById('action').value;
-    if (!box || !entire || !action) { showToast('toastForm','⚠ Please answer all three questions.','error'); return; }
-    const status = action === 'pick up' ? 'Checked Out' : 'In Storage';
+  // ══ TAB 1 – CHECK IN / CHECK OUT ══════════════════════════════════
+  function handleItemTypeChange() {
+    const type = document.getElementById('cicoItemType').value;
+    const row  = document.getElementById('cicoDescRow');
+    const lbl  = document.getElementById('cicoDescLabel');
+    const inp  = document.getElementById('cicoDesc');
+    if (type === 'Entire Box') {
+      lbl.textContent = 'Enter Box Label';
+      inp.placeholder = 'e.g. Box A';
+      row.style.display = 'block';
+    } else if (type === 'Loose Items') {
+      lbl.textContent = 'Enter Item Description';
+      inp.placeholder = 'e.g. Extension cords, projector';
+      row.style.display = 'block';
+    } else {
+      row.style.display = 'none';
+    }
+  }
+
+  async function submitCico() {
+    const name     = document.getElementById('cicoName').value.trim();
+    const action   = document.getElementById('cicoAction').value;
+    const itemType = document.getElementById('cicoItemType').value;
+    const desc     = document.getElementById('cicoDesc').value.trim();
+
+    if (!name)     { showToast('toastForm','⚠ Please enter your name (A).','error'); return; }
+    if (!action)   { showToast('toastForm','⚠ Please select an action (B).','error'); return; }
+    if (!itemType) { showToast('toastForm','⚠ Please select an item type (C).','error'); return; }
+    if (!desc)     { showToast('toastForm','⚠ Please fill in the description (D).','error'); return; }
+
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${LOG_TABLE}`, {
-        method:'POST', headers, body: JSON.stringify({ box, entire_box: entire, status })
+      const res = await fetch(`${SUPABASE_URL}/rest/v1/${LOG_HIST_TABLE}`, {
+        method:'POST', headers,
+        body: JSON.stringify({
+          ts:          new Date().toISOString(),
+          name,
+          action,
+          item:        itemType,
+          description: desc
+        })
       });
       if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
-      document.getElementById('boxName').value = '';
-      document.getElementById('entireBox').value = '';
-      document.getElementById('action').value = '';
+      document.getElementById('cicoName').value     = '';
+      document.getElementById('cicoAction').value   = '';
+      document.getElementById('cicoItemType').value = '';
+      document.getElementById('cicoDesc').value     = '';
+      document.getElementById('cicoDescRow').style.display = 'none';
       showToast('toastForm','✔ Entry recorded successfully!','success');
     } catch(e) { showToast('toastForm','✖ Error: ' + e.message,'error'); }
     finally { btn.disabled = false; btn.textContent = '▶ Submit Entry'; }
@@ -552,6 +626,59 @@
       btn.textContent = '🗑 Delete'; btn.disabled = false;
       alert('Error deleting: ' + e.message);
     }
+  }
+
+  // ══ TAB 4 – LOG HISTORY ════════════════════════════════════════════
+  async function renderHistory() {
+    const spinner = document.getElementById('histSpinner');
+    const tbody   = document.getElementById('histBody');
+    const emptyEl = document.getElementById('histEmpty');
+    const countEl = document.getElementById('histCount');
+    spinner.classList.add('show');
+    tbody.innerHTML = '';
+    try {
+      const res = await fetch(
+        `${SUPABASE_URL}/rest/v1/${LOG_HIST_TABLE}?select=*&order=id.desc`,
+        { headers }
+      );
+      if (!res.ok) throw new Error(await res.text());
+      const rows = await res.json();
+      countEl.textContent = rows.length + ' entr' + (rows.length === 1 ? 'y' : 'ies');
+      if (rows.length === 0) {
+        emptyEl.style.display = 'block';
+      } else {
+        emptyEl.style.display = 'none';
+        rows.forEach(r => {
+          const badgeCls = r.action === 'Checking In' ? 'act-in' : 'act-out';
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="color:var(--muted);font-size:0.78rem;white-space:nowrap">${fmtTs(r.ts)}</td>
+            <td><strong>${esc(r.name)}</strong></td>
+            <td><span class="badge ${badgeCls}">${esc(r.action)}</span></td>
+            <td>${esc(r.item)}</td>
+            <td class="cell-items">${esc(r.description)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    } catch(err) {
+      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">
+        ⚠ Could not load log history: ${esc(err.message)}<br><br>
+        <small>Run this SQL in Supabase to create the table:<br>
+        <code style="display:block;background:#f0ece4;padding:10px;margin-top:8px;font-size:0.72rem;line-height:1.6">
+create table log_history (
+  id bigint generated always as identity primary key,
+  ts timestamptz default now(),
+  name text,
+  action text,
+  item text,
+  description text
+);
+alter table log_history enable row level security;
+create policy "Allow all" on log_history
+  for all using (true) with check (true);</code></small>
+      </td></tr>`;
+    } finally { spinner.classList.remove('show'); }
   }
 
   async function clearInventory() {
