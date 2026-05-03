@@ -100,18 +100,18 @@
 
   /* TABLE */
   .table-wrap { overflow-x: auto; }
-  .data-table { width: 100%; border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; }
+  .data-table { width: 100%; border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; table-layout: fixed; }
   .data-table th {
     background: var(--border); color: var(--bg); padding: 12px 16px;
     text-align: left; letter-spacing: 1.2px; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap;
   }
-  .data-table col.col-box    { width: 17%; }
-  .data-table col.col-items  { width: 36%; }
-  .data-table col.col-status { width: 15%; }
-  .data-table col.col-ts     { width: 20%; }
+  .data-table col.col-box    { width: 15%; }
+  .data-table col.col-items  { width: 38%; }
+  .data-table col.col-status { width: 17%; }
+  .data-table col.col-ts     { width: 18%; }
   .data-table col.col-act    { width: 12%; }
   .data-table td { padding: 10px 16px; border-bottom: 1px solid #ddd; vertical-align: middle; }
-  .data-table td.cell-items { white-space: normal; line-height: 1.55; word-break: break-word; }
+  .data-table td.cell-items { white-space: normal; line-height: 1.55; word-break: break-word; overflow-wrap: break-word; }
   .data-table tr:last-child td { border-bottom: none; }
   .data-table tr:not(.editing):hover td { background: #ece6db; }
 
@@ -484,7 +484,7 @@
   // Map status value → display label
   function statusLabel(s) {
     if (s === 'Checked Out') return 'Checked Out';
-    if (s === 'Partially Checked Out') return 'Partially Checked Out – Refer to Log';
+    if (s === 'Partially Checked Out') return 'Partially Checked Out – Refer to Log History';
     return 'Checked In';
   }
 
@@ -511,7 +511,7 @@
     const opts = [
       { val: 'Checked In',           label: 'Checked In' },
       { val: 'Checked Out',          label: 'Checked Out' },
-      { val: 'Partially Checked Out',label: 'Partially Checked Out – Refer to Log' },
+      { val: 'Partially Checked Out',label: 'Partially Checked Out – Refer to Log History' },
     ];
     const optHtml = opts.map(o =>
       `<option value="${o.val}"${r.status === o.val ? ' selected' : ''}>${o.label}</option>`
