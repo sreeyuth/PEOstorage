@@ -43,7 +43,7 @@
   header .logo span { color: var(--accent); }
   header .subtitle { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: #aaa; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
 
-  .app-container { max-width: 1040px; margin: 40px auto; padding: 0 20px; display: grid; gap: 28px; }
+  .app-container { max-width: 1280px; margin: 40px auto; padding: 0 20px; display: grid; gap: 28px; }
 
   /* TABS */
   .tabs { display: flex; border: 2px solid var(--border); width: fit-content; background: var(--border); gap: 2px; flex-wrap: wrap; }
@@ -102,8 +102,8 @@
   .table-wrap { overflow-x: auto; }
   .data-table { width: 100%; border-collapse: collapse; font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; table-layout: fixed; }
   .data-table th {
-    background: var(--border); color: var(--bg); padding: 12px 16px;
-    text-align: left; letter-spacing: 1.2px; text-transform: uppercase; font-size: 0.68rem; white-space: nowrap;
+    background: var(--border); color: var(--bg); padding: 12px 14px;
+    text-align: center; letter-spacing: 0.5px; text-transform: uppercase; font-size: 0.65rem; white-space: normal; word-break: break-word;
   }
   .data-table col.col-box    { width: 15%; }
   .data-table col.col-items  { width: 38%; }
@@ -210,9 +210,9 @@
 
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('form',      this)">🔄 Check In / Check Out</button>
-    <button class="tab-btn"        onclick="switchTab('additem',   this)">➕ Add New Item</button>
-    <button class="tab-btn"        onclick="switchTab('inventory', this)">📋 Inventory Status</button>
     <button class="tab-btn"        onclick="switchTab('history',   this)">📜 Log History</button>
+    <button class="tab-btn"        onclick="switchTab('inventory', this)">📋 Inventory Status</button>
+    <button class="tab-btn"        onclick="switchTab('additem',   this)">➕ Add New Inventory</button>
     <button class="tab-btn"        onclick="switchTab('qr',        this)">🔗 QR Code</button>
   </div>
 
@@ -249,7 +249,7 @@
 
   <!-- ══ TAB 2 – ADD NEW ITEM ══ -->
   <div class="panel card" id="panel-additem">
-    <div class="card-title">Add New Item to Inventory</div>
+    <div class="card-title">Add New Inventory</div>
     <div class="form-row">
       <label><span class="q-num">A</span>Box Name or Description</label>
       <input type="text" id="newBoxName" placeholder="e.g. Box A – Kitchen supplies" />
@@ -313,11 +313,11 @@
     <div class="table-wrap">
       <table class="data-table" id="histTable">
         <colgroup>
-          <col style="width:18%">
-          <col style="width:15%">
-          <col style="width:15%">
-          <col style="width:15%">
-          <col style="width:37%">
+          <col style="width:16%">
+          <col style="width:14%">
+          <col style="width:14%">
+          <col style="width:14%">
+          <col style="width:42%">
         </colgroup>
         <thead>
           <tr>
@@ -656,7 +656,7 @@
             <td><strong>${esc(r.name)}</strong></td>
             <td><span class="badge ${badgeCls}">${esc(r.action)}</span></td>
             <td>${esc(r.item)}</td>
-            <td class="cell-items">${esc(r.description)}</td>
+            <td class="cell-items" style="word-break:break-word;white-space:normal;line-height:1.55">${esc(r.description)}</td>
           `;
           tbody.appendChild(tr);
         });
