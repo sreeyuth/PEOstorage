@@ -116,7 +116,7 @@
   .data-table tr:not(.editing):hover td { background: #ece6db; }
 
   /* BADGES */
-  .badge { display: inline-block; padding: 5px 10px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; border: 1.5px solid; white-space: nowrap; }
+  .badge { display: inline-block; padding: 5px 10px; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; border: 1.5px solid; white-space: normal; word-break: break-word; }
   .badge.checked-in      { color: #0a5c2a; border-color: #1a6b3c; background: #d4edda; }
   .badge.checked-out     { color: #7a0000; border-color: #cc0000; background: #ffd5d5; }
   .badge.partial         { color: #7a3c00; border-color: #c45e00; background: #ffe5c0; }
@@ -539,7 +539,7 @@
   // Map status value → display label
   function statusLabel(s) {
     if (s === 'Checked Out') return 'Checked Out';
-    if (s === 'Partially Checked Out') return 'Partially Checked Out – Refer to Log History';
+    if (s === 'Partially Checked Out') return 'Partially Checked Out – See Log';
     return 'Checked In';
   }
 
@@ -567,7 +567,7 @@
     const opts = [
       { val: 'Checked In',           label: 'Checked In' },
       { val: 'Checked Out',          label: 'Checked Out' },
-      { val: 'Partially Checked Out',label: 'Partially Checked Out – Refer to Log History' },
+      { val: 'Partially Checked Out',label: 'Partially Checked Out – See Log' },
     ];
     const optHtml = opts.map(o =>
       `<option value="${o.val}"${r.status === o.val ? ' selected' : ''}>${o.label}</option>`
