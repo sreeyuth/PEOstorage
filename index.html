@@ -245,11 +245,11 @@
   <div class="panel active card" id="panel-form">
     <div class="card-title">Check In / Check Out</div>
     <div class="form-row">
-      <label><span class="q-num">A</span>Name</label>
+      <label>Name</label>
       <input type="text" id="cicoName" placeholder="Enter your name" />
     </div>
     <div class="form-row">
-      <label><span class="q-num">B</span>Action</label>
+      <label>Action</label>
       <select id="cicoAction">
         <option value="">— Select Action —</option>
         <option value="Checking In">Checking In</option>
@@ -257,7 +257,7 @@
       </select>
     </div>
     <div class="form-row">
-      <label><span class="q-num">C</span>Item Type</label>
+      <label>Item Type</label>
       <select id="cicoItemType" onchange="handleItemTypeChange()">
         <option value="">— Select Item Type —</option>
         <option value="Entire Box">Entire Box</option>
@@ -266,7 +266,7 @@
       </select>
     </div>
     <div class="form-row" id="cicoDescRow" style="display:none">
-      <label><span class="q-num">D</span><span id="cicoDescLabel">Description</span></label>
+      <label><span id="cicoDescLabel">Description</span></label>
       <input type="text" id="cicoDesc" placeholder="" />
     </div>
     <button class="submit-btn" id="submitBtn" onclick="submitCico()">▶ Submit Entry</button>
@@ -277,11 +277,11 @@
   <div class="panel card" id="panel-additem">
     <div class="card-title">Add New Inventory</div>
     <div class="form-row">
-      <label><span class="q-num">A</span>Box Name or Description</label>
+      <label>Box Name or Description</label>
       <input type="text" id="newBoxName" placeholder="e.g. Box A – Kitchen supplies" />
     </div>
     <div class="form-row">
-      <label><span class="q-num">B</span>Items</label>
+      <label>Items</label>
       <input type="text" id="newItems" placeholder="e.g. Plates, cups, tablecloths" />
     </div>
     <button class="submit-btn" id="addItemBtn" onclick="submitNewItem()">▶ Add to Inventory</button>
