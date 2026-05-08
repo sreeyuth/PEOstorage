@@ -554,7 +554,7 @@
       : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`;
     tr.innerHTML = `
       <td><strong>${esc(r.box_name)}</strong></td>
-      <td class="cell-items">${esc(r.items)}</td>
+      <td class="cell-items">${r.items ? r.items.split('•').map(i => i.trim()).filter(i => i).map(i => `<div>${esc(i)}</div>`).join('') : ''}</td>
       <td><span class="badge ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>${actionCell}</td>
