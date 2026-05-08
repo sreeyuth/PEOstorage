@@ -308,7 +308,7 @@
     <div class="pin-bar">
       <input class="pin-input" type="password" id="invPin" maxlength="4" placeholder="••••"
              oninput="checkPin()" onkeydown="if(event.key==='Enter')checkPin()" />
-      <button class="pin-btn" onclick="checkPin()">🔓 Unlock Editing</button>
+      <button class="pin-btn" onclick="checkPin()">🔓 Unlock Modify</button>
       <span class="pin-status locked" id="pinStatus">🔒 Read-only</span>
     </div>
     <div class="table-toolbar">
@@ -334,7 +334,7 @@
             <th>Items</th>
             <th>Status</th>
             <th>Time of Last Status Change</th>
-            <th>Modify</th>
+            <th>🔒 Modify</th>
           </tr>
         </thead>
         <tbody id="invBody"></tbody>
