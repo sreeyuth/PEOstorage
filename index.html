@@ -105,11 +105,11 @@
     background: var(--border); color: var(--bg); padding: 12px 14px;
     text-align: center; letter-spacing: 0.5px; text-transform: uppercase; font-size: 0.65rem; white-space: normal; word-break: break-word;
   }
-  .data-table col.col-box    { width: 14%; }
-  .data-table col.col-items  { width: 34%; }
+  .data-table col.col-box    { width: 13%; }
+  .data-table col.col-items  { width: 38%; }
   .data-table col.col-status { width: 17%; }
   .data-table col.col-ts     { width: 17%; }
-  .data-table col.col-act    { width: 18%; }
+  .data-table col.col-act    { width: 15%; }
   .data-table td { padding: 10px 16px; border-bottom: 1px solid #ddd; vertical-align: middle; text-align: center; }
   .data-table td.cell-items { white-space: normal; line-height: 1.55; word-break: break-word; overflow-wrap: break-word; text-align: left; }
   .data-table tr:last-child td { border-bottom: none; }
@@ -334,7 +334,7 @@
             <th>Items</th>
             <th>Status</th>
             <th>Time of Last Status Change</th>
-            <th>Actions</th>
+            <th>Modify</th>
           </tr>
         </thead>
         <tbody id="invBody"></tbody>
@@ -560,18 +560,17 @@
   // Render a normal (read) row
   function renderReadRow(tr, r) {
     tr.className = '';
-    const actionCell = _invUnlocked
-      ? `<div class="row-actions">
-           <button class="btn-edit"   onclick="startEdit(this, ${r.id})">✏ Edit</button>
-           <button class="btn-delete" onclick="deleteRow(this, ${r.id})">🗑 Delete</button>
-         </div>`
-      : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`;
+
     tr.innerHTML = `
       <td><strong>${esc(r.box_name)}</strong></td>
       <td class="cell-items">${r.items ? r.items.split('•').map(i => i.trim()).filter(i => i).map(i => `<div>• ${esc(i)}</div>`).join('') : ''}</td>
       <td><span class="badge ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
-      <td>${actionCell}</td>
+      <td>
+        <div class="row-actions">
+          ${_invUnlocked ? `<button class="btn-edit" onclick="startEdit(this, ${r.id})">✏ Edit</button><button class="btn-delete" onclick="deleteRow(this, ${r.id})">🗑 Delete</button>` : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`}
+        </div>
+      </td>
     `;
   }
 
