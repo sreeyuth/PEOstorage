@@ -180,6 +180,20 @@
     box-shadow: 2px 2px 0 var(--accent);
   }
   .inline-input:focus { outline: none; }
+  .inline-textarea {
+    width: 100%; padding: 6px 10px; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem;
+    border: 1.5px solid var(--accent); background: #fffdf7; color: var(--text);
+    box-shadow: 2px 2px 0 var(--accent); resize: vertical; min-height: 80px; line-height: 1.6;
+  }
+  .inline-textarea:focus { outline: none; }
+  textarea.form-textarea {
+    width: 100%; padding: 12px 16px; font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem; border: 2px solid var(--border); background: #fff;
+    color: var(--text); resize: vertical; min-height: 100px; line-height: 1.6;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  textarea.form-textarea:focus { outline: none; border-color: var(--accent); box-shadow: 3px 3px 0 var(--accent); }
+  textarea.form-textarea::placeholder { color: #bbb; }
   tr.editing td { background: #fff8e6 !important; }
 
   /* MISC */
@@ -282,7 +296,7 @@
     </div>
     <div class="form-row">
       <label>Items</label>
-      <input type="text" id="newItems" placeholder="e.g. Plates, cups, tablecloths" />
+      <textarea id="newItems" class="form-textarea" placeholder="Enter each item on a new line&#10;e.g.&#10;Plates&#10;Cups&#10;Tablecloths"></textarea>
     </div>
     <button class="submit-btn" id="addItemBtn" onclick="submitNewItem()">▶ Add to Inventory</button>
     <div class="toast" id="toastAddItem"></div>
@@ -510,7 +524,7 @@
   // ══ TAB 2 – ADD NEW ITEM ════════════════════════════════════════════
   async function submitNewItem() {
     const box_name = document.getElementById('newBoxName').value.trim();
-    const items    = document.getElementById('newItems').value.trim();
+    const items    = document.getElementById('newItems').value.trim().split('\n').map(i => i.trim()).filter(i => i).join(' • ');
     if (!box_name || !items) { showToast('toastAddItem','⚠ Please fill in both fields.','error'); return; }
     const btn = document.getElementById('addItemBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
@@ -554,7 +568,7 @@
       : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`;
     tr.innerHTML = `
       <td><strong>${esc(r.box_name)}</strong></td>
-      <td class="cell-items">${r.items ? r.items.split('•').map(i => i.trim()).filter(i => i).map(i => `<div>${esc(i)}</div>`).join('') : ''}</td>
+      <td class="cell-items">${r.items ? r.items.split('•').map(i => i.trim()).filter(i => i).map(i => `<div>• ${esc(i)}</div>`).join('') : ''}</td>
       <td><span class="badge ${statusClass(r.status)}">${statusLabel(r.status)}</span></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>${actionCell}</td>
@@ -574,7 +588,7 @@
     ).join('');
     tr.innerHTML = `
       <td><input class="inline-input" id="edit-box-${r.id}"    value="${esc(r.box_name)}" /></td>
-      <td class="cell-items"><input class="inline-input" id="edit-items-${r.id}"  value="${esc(r.items)}" /></td>
+      <td class="cell-items"><textarea class="inline-textarea" id="edit-items-${r.id}">${esc(r.items ? r.items.split('•').map(i => i.trim()).join('\n') : '')}</textarea></td>
       <td><select class="inline-select" id="edit-status-${r.id}">${optHtml}</select></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>
@@ -638,7 +652,7 @@
   async function saveEdit(btn, id) {
     const tr       = btn.closest('tr');
     const box_name = document.getElementById(`edit-box-${id}`).value.trim();
-    const items    = document.getElementById(`edit-items-${id}`).value.trim();
+    const items    = document.getElementById(`edit-items-${id}`).value.trim().split('\n').map(i => i.trim()).filter(i => i).join(' • ');
     const status   = document.getElementById(`edit-status-${id}`).value;
     if (!box_name || !items) { alert('Both fields are required.'); return; }
 
