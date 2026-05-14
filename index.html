@@ -275,7 +275,7 @@
       <select id="cicoItemType" onchange="handleItemTypeChange()">
         <option value="">— Select Item Type —</option>
         <option value="Entire Box">Entire Box</option>
-        <option value="Loose Item from Box">Loose Item from Box</option>
+        <option value="Loose Item in Box">Loose Item in Box</option>
         <option value="Loose Standalone Item">Loose Standalone Item</option>
       </select>
     </div>
@@ -473,7 +473,7 @@
       lbl.textContent = 'Enter Box Label';
       inp.placeholder = 'e.g. Box A';
       row.style.display = 'block';
-    } else if (type === 'Loose Item from Box') {
+    } else if (type === 'Loose Item in Box') {
       lbl.textContent = 'Enter Box Label and Item Description';
       inp.placeholder = 'e.g. Box A – Extension cords';
       row.style.display = 'block';
