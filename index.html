@@ -418,19 +418,6 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
-  // ── Expose globals needed by inline onclick handlers ─────────────────
-  window.switchTab          = switchTab;
-  window.handleItemTypeChange = handleItemTypeChange;
-  window.submitCico         = submitCico;
-  window.submitNewItem      = submitNewItem;
-  window.renderInventory    = renderInventory;
-  window.renderHistory      = renderHistory;
-  window.clearInventory     = clearInventory;
-  window.checkPin           = checkPin;
-  window.startEdit          = startEdit;
-  window.cancelEdit         = cancelEdit;
-  window.saveEdit           = saveEdit;
-  window.deleteRow          = deleteRow;
 
   // ── Utilities ────────────────────────────────────────────────────────
   function switchTab(name, btn) {
@@ -755,6 +742,20 @@ This cannot be undone.`)) return;
       correctLevel: QRCode.CorrectLevel.H
     });
   }
+
+  // ── Expose all functions to global scope for onclick handlers ──────
+  window.switchTab           = switchTab;
+  window.handleItemTypeChange= handleItemTypeChange;
+  window.submitCico          = submitCico;
+  window.submitNewItem       = submitNewItem;
+  window.renderInventory     = renderInventory;
+  window.renderHistory       = renderHistory;
+  window.clearInventory      = clearInventory;
+  window.checkPin            = checkPin;
+  window.startEdit           = startEdit;
+  window.cancelEdit          = cancelEdit;
+  window.saveEdit            = saveEdit;
+  window.deleteRow           = deleteRow;
 
   generateQR();
   renderInventory();
