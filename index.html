@@ -524,8 +524,7 @@
   // ══ TAB 2 – ADD NEW INVENTORY ════════════════════════════════════════
   async function submitNewItem() {
     const box_name = document.getElementById('newBoxName').value.trim();
-    const items    = document.getElementById('newItems').value.trim().split('
-').map(i => i.trim()).filter(i => i).join(' • ');
+    const items    = document.getElementById('newItems').value.trim().split('\n').map(i => i.trim()).filter(i => i).join(' • ');
     if (!box_name || !items) { showToast('toastAddItem','⚠ Please fill in both fields.','error'); return; }
     const btn = document.getElementById('addItemBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
@@ -587,8 +586,7 @@
     ).join('');
     tr.innerHTML = `
       <td><input class="inline-input" id="edit-box-${r.id}" value="${esc(r.box_name)}" /></td>
-      <td class="cell-items"><textarea class="inline-textarea" id="edit-items-${r.id}">${esc(r.items ? r.items.split('•').map(i => i.trim()).join('
-') : '')}</textarea></td>
+      <td class="cell-items"><textarea class="inline-textarea" id="edit-items-${r.id}">${esc(r.items ? r.items.split('•').map(i => i.trim()).join('\n') : '')}</textarea></td>
       <td><select class="inline-select" id="edit-status-${r.id}">${optHtml}</select></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>
@@ -647,8 +645,7 @@
   async function saveEdit(btn, id) {
     const tr       = btn.closest('tr');
     const box_name = document.getElementById(`edit-box-${id}`).value.trim();
-    const items    = document.getElementById(`edit-items-${id}`).value.trim().split('
-').map(i => i.trim()).filter(i => i).join(' • ');
+    const items    = document.getElementById(`edit-items-${id}`).value.trim().split('\n').map(i => i.trim()).filter(i => i).join(' • ');
     const status   = document.getElementById(`edit-status-${id}`).value;
     if (!box_name || !items) { alert('Both fields are required.'); return; }
     btn.textContent = '…'; btn.disabled = true;
