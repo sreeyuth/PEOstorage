@@ -349,6 +349,12 @@
   <!-- ══ TAB 4 – LOG HISTORY ══ -->
   <div class="panel card" id="panel-history">
     <div class="card-title">Log History</div>
+    <div class="pin-bar">
+      <input class="pin-input" type="password" id="histPin" maxlength="4" placeholder="••••"
+             oninput="checkHistPin()" onkeydown="if(event.key==='Enter')checkHistPin()" />
+      <button class="pin-btn" onclick="checkHistPin()">🔓 Unlock Modify</button>
+      <span class="pin-status locked" id="histPinStatus">🔒 Read-only</span>
+    </div>
     <div class="table-toolbar">
       <div class="entry-count" id="histCount">— entries</div>
       <div class="toolbar-right">
@@ -359,11 +365,12 @@
     <div class="table-wrap">
       <table class="data-table" id="histTable">
         <colgroup>
-          <col style="width:16%">
           <col style="width:14%">
-          <col style="width:14%">
-          <col style="width:14%">
-          <col style="width:42%">
+          <col style="width:13%">
+          <col style="width:13%">
+          <col style="width:13%">
+          <col style="width:35%">
+          <col style="width:12%">
         </colgroup>
         <thead>
           <tr>
@@ -372,6 +379,7 @@
             <th>Action</th>
             <th>Item</th>
             <th>Description</th>
+            <th>🔒 Modify</th>
           </tr>
         </thead>
         <tbody id="histBody"></tbody>
@@ -449,8 +457,10 @@
   }
 
   // ── PIN auth ─────────────────────────────────────────────────────────
-  let _invUnlocked = false;
+  let _invUnlocked  = false;
+  let _histUnlocked = false;
   const CORRECT_PIN = '2121';
+
 
   function checkPin() {
     const val = document.getElementById('invPin').value;
@@ -465,6 +475,21 @@
       statusEl.className = 'pin-status locked';
     }
     renderInventory();
+  }
+
+  function checkHistPin() {
+    const val = document.getElementById('histPin').value;
+    const statusEl = document.getElementById('histPinStatus');
+    if (val === CORRECT_PIN) {
+      _histUnlocked = true;
+      statusEl.textContent = '🔓 Editing unlocked';
+      statusEl.className = 'pin-status unlocked';
+    } else {
+      _histUnlocked = false;
+      statusEl.textContent = '🔒 Read-only';
+      statusEl.className = 'pin-status locked';
+    }
+    renderHistory();
   }
 
   // ══ TAB 1 – CHECK IN / CHECK OUT ════════════════════════════════════
@@ -696,6 +721,98 @@ This cannot be undone.`)) return;
   }
 
   // ══ TAB 4 – LOG HISTORY ══════════════════════════════════════════════
+  // ── Log History cache ────────────────────────────────────────────────
+  let _histCache = {};
+
+  function histReadRow(tr, r) {
+    const badgeCls = r.action === 'Checking In' ? 'act-in' : 'act-out';
+    tr.className = '';
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:0.78rem;white-space:nowrap">${fmtTs(r.ts)}</td>
+      <td><strong>${esc(r.name)}</strong></td>
+      <td><span class="badge ${badgeCls}">${esc(r.action)}</span></td>
+      <td>${esc(r.item)}</td>
+      <td class="cell-items" style="word-break:break-word;white-space:normal;line-height:1.55">${esc(r.description)}</td>
+      <td>
+        <div class="row-actions">
+          ${_histUnlocked
+            ? `<button class="btn-edit" onclick="histStartEdit(this,'${r.id}')">✏ Edit</button><button class="btn-delete" onclick="histDeleteRow(this,'${r.id}')">🗑 Delete</button>`
+            : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`}
+        </div>
+      </td>
+    `;
+  }
+
+  function histEditRow(tr, r) {
+    tr.className = 'editing';
+    const actionOpts = ['Checking In','Checking Out'].map(v =>
+      `<option value="${v}"${r.action===v?' selected':''}>${v}</option>`).join('');
+    const itemOpts = ['Entire Box','Loose Item in Box','Loose Standalone Item'].map(v =>
+      `<option value="${v}"${r.item===v?' selected':''}>${v}</option>`).join('');
+    tr.innerHTML = `
+      <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.ts)}</td>
+      <td><input class="inline-input" id="hedit-name-${r.id}" value="${esc(r.name)}" /></td>
+      <td><select class="inline-select" id="hedit-action-${r.id}">${actionOpts}</select></td>
+      <td><select class="inline-select" id="hedit-item-${r.id}">${itemOpts}</select></td>
+      <td><input class="inline-input" id="hedit-desc-${r.id}" value="${esc(r.description)}" /></td>
+      <td>
+        <div class="row-actions">
+          <button class="btn-save"   onclick="histSaveEdit(this,'${r.id}')">✔ Save</button>
+          <button class="btn-cancel" onclick="histCancelEdit(this,'${r.id}')">✕ Cancel</button>
+        </div>
+      </td>
+    `;
+    document.getElementById(`hedit-name-${r.id}`).focus();
+  }
+
+  function histStartEdit(btn, id) {
+    histEditRow(btn.closest('tr'), _histCache[id]);
+  }
+
+  function histCancelEdit(btn, id) {
+    histReadRow(btn.closest('tr'), _histCache[id]);
+  }
+
+  async function histSaveEdit(btn, id) {
+    const tr   = btn.closest('tr');
+    const name = document.getElementById(`hedit-name-${id}`).value.trim();
+    const action = document.getElementById(`hedit-action-${id}`).value;
+    const item   = document.getElementById(`hedit-item-${id}`).value;
+    const description = document.getElementById(`hedit-desc-${id}`).value.trim();
+    if (!name || !description) { alert('Name and Description are required.'); return; }
+    btn.textContent = '…'; btn.disabled = true;
+    try {
+      await updateDoc(doc(db, 'log_history', id), { name, action, item, description });
+      _histCache[id] = { ..._histCache[id], name, action, item, description };
+      histReadRow(tr, _histCache[id]);
+    } catch(e) {
+      btn.textContent = '✔ Save'; btn.disabled = false;
+      alert('Error saving: ' + e.message);
+    }
+  }
+
+  async function histDeleteRow(btn, id) {
+    const r = _histCache[id];
+    if (!confirm(`Delete log entry by "${r.name}"?\nThis cannot be undone.`)) return;
+    btn.textContent = '…'; btn.disabled = true;
+    try {
+      await deleteDoc(doc(db, 'log_history', id));
+      const tr = btn.closest('tr');
+      tr.style.transition = 'opacity 0.3s';
+      tr.style.opacity = '0';
+      setTimeout(() => {
+        tr.remove();
+        delete _histCache[id];
+        const remaining = Object.keys(_histCache).length;
+        document.getElementById('histCount').textContent = remaining + ' entr' + (remaining === 1 ? 'y' : 'ies');
+        if (remaining === 0) document.getElementById('histEmpty').style.display = 'block';
+      }, 300);
+    } catch(e) {
+      btn.textContent = '🗑 Delete'; btn.disabled = false;
+      alert('Error deleting: ' + e.message);
+    }
+  }
+
   async function renderHistory() {
     const spinner = document.getElementById('histSpinner');
     const tbody   = document.getElementById('histBody');
@@ -703,6 +820,7 @@ This cannot be undone.`)) return;
     const countEl = document.getElementById('histCount');
     spinner.classList.add('show');
     tbody.innerHTML = '';
+    _histCache = {};
     try {
       const snap = await getDocs(query(collection(db, 'log_history'), orderBy('ts', 'desc')));
       countEl.textContent = snap.size + ' entr' + (snap.size === 1 ? 'y' : 'ies');
@@ -711,21 +829,16 @@ This cannot be undone.`)) return;
       } else {
         emptyEl.style.display = 'none';
         snap.forEach(docSnap => {
-          const r = docSnap.data();
-          const badgeCls = r.action === 'Checking In' ? 'act-in' : 'act-out';
+          const r = { id: docSnap.id, ...docSnap.data() };
+          _histCache[r.id] = r;
           const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td style="color:var(--muted);font-size:0.78rem;white-space:nowrap">${fmtTs(r.ts)}</td>
-            <td><strong>${esc(r.name)}</strong></td>
-            <td><span class="badge ${badgeCls}">${esc(r.action)}</span></td>
-            <td>${esc(r.item)}</td>
-            <td class="cell-items" style="word-break:break-word;white-space:normal;line-height:1.55">${esc(r.description)}</td>
-          `;
+          tr.dataset.id = r.id;
+          histReadRow(tr, r);
           tbody.appendChild(tr);
         });
       }
     } catch(err) {
-      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load log history: ${esc(err.message)}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load log history: ${esc(err.message)}</td></tr>`;
     } finally { spinner.classList.remove('show'); }
   }
 
@@ -747,6 +860,11 @@ This cannot be undone.`)) return;
   window.submitNewItem       = submitNewItem;
   window.renderInventory     = renderInventory;
   window.renderHistory       = renderHistory;
+  window.checkHistPin        = checkHistPin;
+  window.histStartEdit       = histStartEdit;
+  window.histCancelEdit      = histCancelEdit;
+  window.histSaveEdit        = histSaveEdit;
+  window.histDeleteRow       = histDeleteRow;
   window.clearInventory      = clearInventory;
   window.checkPin            = checkPin;
   window.startEdit           = startEdit;
