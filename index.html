@@ -400,19 +400,37 @@
 
 </div>
 
-<script>
-  const SUPABASE_URL = 'https://lisimvtheamxhfqvzirz.supabase.co';
-  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxpc2ltdnRoZWFteGhmcXZ6aXJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc3Mzk0MzYsImV4cCI6MjA5MzMxNTQzNn0.KInfxkNY9sHhSN7xJS9AB4ZexXddKcJBC1aOF1ropVA';
-  const LOG_TABLE = 'box_logs';
-  const INV_TABLE = 'inventory';
-  const LOG_HIST_TABLE = 'log_history';
+<script type="module">
+  import { initializeApp }                              from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc, getDocs,
+           doc, updateDoc, deleteDoc, query,
+           orderBy, serverTimestamp, Timestamp }        from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  const headers = {
-    'Content-Type': 'application/json',
-    'apikey': SUPABASE_KEY,
-    'Authorization': 'Bearer ' + SUPABASE_KEY,
-    'Prefer': 'return=representation'
+  // ── Firebase init ───────────────────────────────────────────────────
+  const firebaseConfig = {
+    apiKey:            "AIzaSyBOMrXLC0m6HPUd2czsXMsKvY-TV4HaBGk",
+    authDomain:        "peostorage-a5f99.firebaseapp.com",
+    projectId:         "peostorage-a5f99",
+    storageBucket:     "peostorage-a5f99.firebasestorage.app",
+    messagingSenderId: "574163668653",
+    appId:             "1:574163668653:web:942bf75cbc588243d08024"
   };
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  // ── Expose globals needed by inline onclick handlers ─────────────────
+  window.switchTab          = switchTab;
+  window.handleItemTypeChange = handleItemTypeChange;
+  window.submitCico         = submitCico;
+  window.submitNewItem      = submitNewItem;
+  window.renderInventory    = renderInventory;
+  window.renderHistory      = renderHistory;
+  window.clearInventory     = clearInventory;
+  window.checkPin           = checkPin;
+  window.startEdit          = startEdit;
+  window.cancelEdit         = cancelEdit;
+  window.saveEdit           = saveEdit;
+  window.deleteRow          = deleteRow;
 
   // ── Utilities ────────────────────────────────────────────────────────
   function switchTab(name, btn) {
@@ -421,7 +439,7 @@
     document.getElementById('panel-' + name).classList.add('active');
     btn.classList.add('active');
     if (name === 'inventory') renderInventory();
-    if (name === 'history') renderHistory();
+    if (name === 'history')   renderHistory();
   }
 
   function showToast(id, msg, type = 'success') {
@@ -431,11 +449,10 @@
     setTimeout(() => t.classList.remove('show'), 4000);
   }
 
-  function fmtTs(iso) {
-    return new Date(iso).toLocaleString('en-CA', {
-      year: 'numeric', month: 'short', day: 'numeric',
-      hour: '2-digit', minute: '2-digit'
-    });
+  function fmtTs(val) {
+    if (!val) return '—';
+    const d = val instanceof Timestamp ? val.toDate() : new Date(val);
+    return d.toLocaleString('en-CA', { year:'numeric', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
   }
 
   function esc(str) {
@@ -460,10 +477,10 @@
       statusEl.textContent = '🔒 Read-only';
       statusEl.className = 'pin-status locked';
     }
-    renderInventory(); // re-render to show/hide edit buttons
+    renderInventory();
   }
 
-  // ══ TAB 1 – CHECK IN / CHECK OUT ══════════════════════════════════
+  // ══ TAB 1 – CHECK IN / CHECK OUT ════════════════════════════════════
   function handleItemTypeChange() {
     const type = document.getElementById('cicoItemType').value;
     const row  = document.getElementById('cicoDescRow');
@@ -492,25 +509,21 @@
     const itemType = document.getElementById('cicoItemType').value;
     const desc     = document.getElementById('cicoDesc').value.trim();
 
-    if (!name)     { showToast('toastForm','⚠ Please enter your name (A).','error'); return; }
-    if (!action)   { showToast('toastForm','⚠ Please select an action (B).','error'); return; }
-    if (!itemType) { showToast('toastForm','⚠ Please select an item type (C).','error'); return; }
-    if (!desc)     { showToast('toastForm','⚠ Please fill in the description (D).','error'); return; }
+    if (!name)     { showToast('toastForm','⚠ Please enter your name.','error');           return; }
+    if (!action)   { showToast('toastForm','⚠ Please select an action.','error');          return; }
+    if (!itemType) { showToast('toastForm','⚠ Please select an item type.','error');       return; }
+    if (!desc)     { showToast('toastForm','⚠ Please fill in the description.','error');   return; }
 
     const btn = document.getElementById('submitBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${LOG_HIST_TABLE}`, {
-        method:'POST', headers,
-        body: JSON.stringify({
-          ts:          new Date().toISOString(),
-          name,
-          action,
-          item:        itemType,
-          description: desc
-        })
+      await addDoc(collection(db, 'log_history'), {
+        ts:          serverTimestamp(),
+        name,
+        action,
+        item:        itemType,
+        description: desc
       });
-      if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
       document.getElementById('cicoName').value     = '';
       document.getElementById('cicoAction').value   = '';
       document.getElementById('cicoItemType').value = '';
@@ -521,46 +534,45 @@
     finally { btn.disabled = false; btn.textContent = '▶ Submit Entry'; }
   }
 
-  // ══ TAB 2 – ADD NEW ITEM ════════════════════════════════════════════
+  // ══ TAB 2 – ADD NEW INVENTORY ════════════════════════════════════════
   async function submitNewItem() {
     const box_name = document.getElementById('newBoxName').value.trim();
-    const items    = document.getElementById('newItems').value.trim().split('\n').map(i => i.trim()).filter(i => i).join(' • ');
+    const items    = document.getElementById('newItems').value.trim().split('
+').map(i => i.trim()).filter(i => i).join(' • ');
     if (!box_name || !items) { showToast('toastAddItem','⚠ Please fill in both fields.','error'); return; }
     const btn = document.getElementById('addItemBtn');
     btn.disabled = true; btn.textContent = 'Saving…';
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}`, {
-        method:'POST', headers,
-        body: JSON.stringify({ box_name, items, status:'Checked In', last_changed: new Date().toISOString() })
+      await addDoc(collection(db, 'inventory'), {
+        box_name,
+        items,
+        status:       'Checked In',
+        last_changed: serverTimestamp()
       });
-      if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
       document.getElementById('newBoxName').value = '';
-      document.getElementById('newItems').value = '';
+      document.getElementById('newItems').value   = '';
       showToast('toastAddItem','✔ Item added to inventory!','success');
     } catch(e) { showToast('toastAddItem','✖ Error: ' + e.message,'error'); }
     finally { btn.disabled = false; btn.textContent = '▶ Add to Inventory'; }
   }
 
-  // ══ TAB 3 – INVENTORY STATUS ════════════════════════════════════════
-
-  // Map status value → badge CSS class
+  // ══ TAB 3 – INVENTORY STATUS ═════════════════════════════════════════
   function statusClass(s) {
-    if (s === 'Checked Out') return 'checked-out';
+    if (s === 'Checked Out')          return 'checked-out';
     if (s === 'Partially Checked Out') return 'partial';
-    return 'checked-in'; // default
+    return 'checked-in';
   }
 
-  // Map status value → display label
   function statusLabel(s) {
-    if (s === 'Checked Out') return 'Checked Out';
+    if (s === 'Checked Out')          return 'Checked Out';
     if (s === 'Partially Checked Out') return 'Partially Checked Out – See Log';
     return 'Checked In';
   }
 
-  // Render a normal (read) row
+  let _invCache = {};
+
   function renderReadRow(tr, r) {
     tr.className = '';
-
     tr.innerHTML = `
       <td><strong>${esc(r.box_name)}</strong></td>
       <td class="cell-items">${r.items ? r.items.split('•').map(i => i.trim()).filter(i => i).map(i => `<div>• ${esc(i)}</div>`).join('') : ''}</td>
@@ -568,40 +580,39 @@
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>
         <div class="row-actions">
-          ${_invUnlocked ? `<button class="btn-edit" onclick="startEdit(this, ${r.id})">✏ Edit</button><button class="btn-delete" onclick="deleteRow(this, ${r.id})">🗑 Delete</button>` : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`}
+          ${_invUnlocked
+            ? `<button class="btn-edit" onclick="startEdit(this,'${r.id}')">✏ Edit</button><button class="btn-delete" onclick="deleteRow(this,'${r.id}')">🗑 Delete</button>`
+            : `<span style="font-family:'IBM Plex Mono',monospace;font-size:0.7rem;color:var(--muted)">—</span>`}
         </div>
       </td>
     `;
   }
 
-  // Render an edit row (inline inputs + status dropdown)
   function renderEditRow(tr, r) {
     tr.className = 'editing';
     const opts = [
-      { val: 'Checked In',           label: 'Checked In' },
-      { val: 'Checked Out',          label: 'Checked Out' },
-      { val: 'Partially Checked Out',label: 'Partially Checked Out – See Log' },
+      { val: 'Checked In',            label: 'Checked In' },
+      { val: 'Checked Out',           label: 'Checked Out' },
+      { val: 'Partially Checked Out', label: 'Partially Checked Out – See Log' },
     ];
     const optHtml = opts.map(o =>
       `<option value="${o.val}"${r.status === o.val ? ' selected' : ''}>${o.label}</option>`
     ).join('');
     tr.innerHTML = `
-      <td><input class="inline-input" id="edit-box-${r.id}"    value="${esc(r.box_name)}" /></td>
-      <td class="cell-items"><textarea class="inline-textarea" id="edit-items-${r.id}">${esc(r.items ? r.items.split('•').map(i => i.trim()).join('\n') : '')}</textarea></td>
+      <td><input class="inline-input" id="edit-box-${r.id}" value="${esc(r.box_name)}" /></td>
+      <td class="cell-items"><textarea class="inline-textarea" id="edit-items-${r.id}">${esc(r.items ? r.items.split('•').map(i => i.trim()).join('
+') : '')}</textarea></td>
       <td><select class="inline-select" id="edit-status-${r.id}">${optHtml}</select></td>
       <td style="color:var(--muted);font-size:0.78rem">${fmtTs(r.last_changed)}</td>
       <td>
         <div class="row-actions">
-          <button class="btn-save"   onclick="saveEdit(this, ${r.id})">✔ Save</button>
-          <button class="btn-cancel" onclick="cancelEdit(this, ${r.id})">✕ Cancel</button>
+          <button class="btn-save"   onclick="saveEdit(this,'${r.id}')">✔ Save</button>
+          <button class="btn-cancel" onclick="cancelEdit(this,'${r.id}')">✕ Cancel</button>
         </div>
       </td>
     `;
     document.getElementById(`edit-box-${r.id}`).focus();
   }
-
-  // Cache of loaded rows (so cancel can revert without a network call)
-  let _invCache = {};
 
   async function renderInventory() {
     const spinner = document.getElementById('invSpinner');
@@ -612,15 +623,14 @@
     tbody.innerHTML = '';
     _invCache = {};
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?select=*&order=id.desc`, { headers });
-      if (!res.ok) throw new Error(await res.text());
-      const rows = await res.json();
-      countEl.textContent = rows.length + ' entr' + (rows.length === 1 ? 'y' : 'ies');
-      if (rows.length === 0) {
+      const snap = await getDocs(query(collection(db, 'inventory'), orderBy('last_changed', 'desc')));
+      countEl.textContent = snap.size + ' entr' + (snap.size === 1 ? 'y' : 'ies');
+      if (snap.empty) {
         emptyEl.style.display = 'block';
       } else {
         emptyEl.style.display = 'none';
-        rows.forEach(r => {
+        snap.forEach(docSnap => {
+          const r = { id: docSnap.id, ...docSnap.data() };
           _invCache[r.id] = r;
           const tr = document.createElement('tr');
           tr.dataset.id = r.id;
@@ -637,7 +647,6 @@
     }
   }
 
-  // ── Edit flow ──────────────────────────────────────────────────────
   function startEdit(btn, id) {
     const tr = btn.closest('tr');
     renderEditRow(tr, _invCache[id]);
@@ -651,21 +660,16 @@
   async function saveEdit(btn, id) {
     const tr       = btn.closest('tr');
     const box_name = document.getElementById(`edit-box-${id}`).value.trim();
-    const items    = document.getElementById(`edit-items-${id}`).value.trim().split('\n').map(i => i.trim()).filter(i => i).join(' • ');
+    const items    = document.getElementById(`edit-items-${id}`).value.trim().split('
+').map(i => i.trim()).filter(i => i).join(' • ');
     const status   = document.getElementById(`edit-status-${id}`).value;
     if (!box_name || !items) { alert('Both fields are required.'); return; }
-
     btn.textContent = '…'; btn.disabled = true;
-
-    const last_changed = new Date().toISOString();
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=eq.${id}`, {
-        method: 'PATCH', headers,
-        body: JSON.stringify({ box_name, items, status, last_changed })
-      });
-      if (!res.ok) { const e = await res.json(); throw new Error(e.message || res.statusText); }
-
-      _invCache[id] = { ..._invCache[id], box_name, items, status, last_changed };
+      const last_changed = serverTimestamp();
+      await updateDoc(doc(db, 'inventory', id), { box_name, items, status, last_changed });
+      // Use local time for immediate display since serverTimestamp needs a round-trip
+      _invCache[id] = { ..._invCache[id], box_name, items, status, last_changed: new Date() };
       renderReadRow(tr, _invCache[id]);
     } catch(e) {
       btn.textContent = '✔ Save'; btn.disabled = false;
@@ -673,18 +677,13 @@
     }
   }
 
-  // ── Delete flow ────────────────────────────────────────────────────
   async function deleteRow(btn, id) {
     const r = _invCache[id];
-    if (!confirm(`Delete "${r.box_name}"?\nThis cannot be undone.`)) return;
-
+    if (!confirm(`Delete "${r.box_name}"?
+This cannot be undone.`)) return;
     btn.textContent = '…'; btn.disabled = true;
     try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=eq.${id}`, {
-        method: 'DELETE', headers
-      });
-      if (!res.ok) throw new Error(await res.text());
-
+      await deleteDoc(doc(db, 'inventory', id));
       const tr = btn.closest('tr');
       tr.style.transition = 'opacity 0.3s';
       tr.style.opacity = '0';
@@ -701,7 +700,18 @@
     }
   }
 
-  // ══ TAB 4 – LOG HISTORY ════════════════════════════════════════════
+  async function clearInventory() {
+    if (!confirm('Delete ALL inventory entries? This cannot be undone.')) return;
+    const spinner = document.getElementById('invSpinner');
+    spinner.classList.add('show');
+    try {
+      const snap = await getDocs(collection(db, 'inventory'));
+      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+      renderInventory();
+    } catch(e) { alert('Error clearing inventory: ' + e.message); spinner.classList.remove('show'); }
+  }
+
+  // ══ TAB 4 – LOG HISTORY ══════════════════════════════════════════════
   async function renderHistory() {
     const spinner = document.getElementById('histSpinner');
     const tbody   = document.getElementById('histBody');
@@ -710,18 +720,14 @@
     spinner.classList.add('show');
     tbody.innerHTML = '';
     try {
-      const res = await fetch(
-        `${SUPABASE_URL}/rest/v1/${LOG_HIST_TABLE}?select=*&order=id.desc`,
-        { headers }
-      );
-      if (!res.ok) throw new Error(await res.text());
-      const rows = await res.json();
-      countEl.textContent = rows.length + ' entr' + (rows.length === 1 ? 'y' : 'ies');
-      if (rows.length === 0) {
+      const snap = await getDocs(query(collection(db, 'log_history'), orderBy('ts', 'desc')));
+      countEl.textContent = snap.size + ' entr' + (snap.size === 1 ? 'y' : 'ies');
+      if (snap.empty) {
         emptyEl.style.display = 'block';
       } else {
         emptyEl.style.display = 'none';
-        rows.forEach(r => {
+        snap.forEach(docSnap => {
+          const r = docSnap.data();
           const badgeCls = r.action === 'Checking In' ? 'act-in' : 'act-out';
           const tr = document.createElement('tr');
           tr.innerHTML = `
@@ -735,37 +741,11 @@
         });
       }
     } catch(err) {
-      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">
-        ⚠ Could not load log history: ${esc(err.message)}<br><br>
-        <small>Run this SQL in Supabase to create the table:<br>
-        <code style="display:block;background:#f0ece4;padding:10px;margin-top:8px;font-size:0.72rem;line-height:1.6">
-create table log_history (
-  id bigint generated always as identity primary key,
-  ts timestamptz default now(),
-  name text,
-  action text,
-  item text,
-  description text
-);
-alter table log_history enable row level security;
-create policy "Allow all" on log_history
-  for all using (true) with check (true);</code></small>
-      </td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" style="color:var(--accent);font-family:'IBM Plex Mono',monospace;padding:20px">⚠ Could not load log history: ${esc(err.message)}</td></tr>`;
     } finally { spinner.classList.remove('show'); }
   }
 
-  async function clearInventory() {
-    if (!confirm('Delete ALL inventory entries? This cannot be undone.')) return;
-    const spinner = document.getElementById('invSpinner');
-    spinner.classList.add('show');
-    try {
-      const res = await fetch(`${SUPABASE_URL}/rest/v1/${INV_TABLE}?id=gte.0`, { method:'DELETE', headers });
-      if (!res.ok) throw new Error(await res.text());
-      renderInventory();
-    } catch(e) { alert('Error clearing inventory: ' + e.message); spinner.classList.remove('show'); }
-  }
-
-  // ── QR Code ──────────────────────────────────────────────────────────
+  // ── QR Code ───────────────────────────────────────────────────────────
   function generateQR() {
     const url = window.location.href.split('?')[0];
     document.getElementById('urlDisplay').textContent = url;
@@ -777,6 +757,7 @@ create policy "Allow all" on log_history
   }
 
   generateQR();
+  renderInventory();
 </script>
 </body>
 </html>
